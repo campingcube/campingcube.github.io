@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://campingcube.github.io/sitemap.xml
