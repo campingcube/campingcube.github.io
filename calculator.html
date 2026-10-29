@@ -473,29 +473,34 @@ renderTabs();renderModels();renderPreset();refresh();
   const box=$("install"), btn=$("installBtn"), hint=$("installHint");
   $("showInstall").hidden=false;
   $("showInstall").addEventListener("click",()=>{try{localStorage.removeItem("ccInstallClosed");}catch(_){}
-    if(!deferred){btn.hidden=true; if(!isMobile) hint.textContent="폰에서 이 페이지를 열면 홈 화면에 앱으로 설치할 수 있어요.";}
-    box.hidden=false; box.scrollIntoView({behavior:"smooth",block:"center"});});
+    if(deferred){btn.hidden=false;} else {btn.hidden=true; hint.textContent=manualHint();}
+    box.hidden=false; box.scrollIntoView({behavior:"smooth",block:"center"}); flash();});
   let closed=false; try{const t=+localStorage.getItem("ccInstallClosed"); closed=t>0&&Date.now()-t<7*864e5;}catch(_){}
   const ua=navigator.userAgent;
   const isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
   const isMobile=isIOS||/Android/i.test(ua);
+  const inApp=/KAKAOTALK|NAVER\(inapp|; wv\)|Instagram|FBAN|FBAV|Line\//i.test(ua);
+  const manualHint=()=>inApp
+    ? "지금은 카카오톡·네이버 같은 앱 안에서 열려 있어서 설치가 안 돼요. 오른쪽 위(또는 아래) 메뉴에서 '다른 브라우저로 열기'를 누른 뒤 다시 설치해 주세요."
+    : isIOS ? "사파리 아래쪽 공유 버튼(□↑)을 누르고 '홈 화면에 추가'를 선택하세요."
+    : isMobile ? "브라우저 오른쪽 위 메뉴(⋮ 또는 ≡)를 누르고 '홈 화면에 추가' 또는 '앱 설치'를 선택하세요. 이미 설치했다면 홈 화면에서 '파워뱅크 계산기' 아이콘을 찾아보세요."
+    : "폰에서 이 페이지를 열면 홈 화면에 앱으로 설치할 수 있어요.";
+  const flash=()=>{box.style.transition="box-shadow .2s";box.style.boxShadow="0 0 0 4px var(--amber)";setTimeout(()=>box.style.boxShadow="",900);};
   let deferred=null;
   window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;btn.hidden=false;if(!closed)box.hidden=false;hint.textContent="홈 화면에 추가하면 앱처럼 바로 열 수 있어요. 캠핑장에서 인터넷이 안 돼도 쓸 수 있어요.";});
-  if(isIOS){
-    box.hidden=closed; btn.hidden=true;
-    hint.textContent="아래쪽 공유 버튼(□↑)을 누르고 '홈 화면에 추가'를 선택하세요. 앱처럼 바로 열 수 있어요.";
-  } else if(isMobile){
-    box.hidden=closed; btn.hidden=true;
-    hint.textContent="브라우저 메뉴(⋮)에서 '홈 화면에 추가' 또는 '앱 설치'를 누르세요.";
-  }
+  if(isMobile){ box.hidden=closed; btn.hidden=true; hint.textContent=manualHint(); }
   btn.addEventListener("click",async()=>{
-    if(!deferred) return;
-    deferred.prompt();
-    try{const r=await deferred.userChoice; if(r.outcome==="accepted") box.hidden=true;}catch(_){}
-    deferred=null;
+    if(!deferred){ btn.hidden=true; hint.textContent=manualHint(); flash(); return; }
+    const d=deferred; deferred=null;
+    try{
+      await d.prompt();
+      const r=await d.userChoice;
+      if(r.outcome==="accepted"){ hint.textContent="설치하고 있어요. 잠시 후 홈 화면에서 '파워뱅크 계산기' 아이콘을 확인하세요."; btn.hidden=true; }
+      else { btn.hidden=true; hint.textContent="설치를 취소했어요. 다시 설치하려면 "+manualHint(); }
+    }catch(_){ btn.hidden=true; hint.textContent=manualHint(); flash(); }
   });
   $("installX").addEventListener("click",()=>{box.hidden=true;try{localStorage.setItem("ccInstallClosed",String(Date.now()));}catch(_){}});
-  window.addEventListener("appinstalled",()=>{box.hidden=true;});
+  window.addEventListener("appinstalled",()=>{hint.textContent="설치가 끝났어요! 홈 화면에서 '파워뱅크 계산기' 아이콘을 눌러 열어보세요.";btn.hidden=true;});
 })();
 // 블로그 등 다른 페이지 안에 넣었을 때 높이를 알려줘서 창 크기가 자동으로 맞춰지게 함
 if(window.parent!==window){
