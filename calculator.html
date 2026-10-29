@@ -126,6 +126,11 @@ input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
 @media (max-width:520px){.crow{grid-template-columns:1fr 1fr}.cname{grid-column:1/-1}.crow .btn{grid-column:1/-1}}
 .empty{border:1px dashed var(--line);border-radius:10px;padding:16px;text-align:center;color:var(--muted)}
 
+.pro{background:var(--panel);color:var(--on-forest);border-radius:14px;padding:22px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.pro-mark{width:44px;height:44px;border-radius:50%;background:var(--amber);color:#232323;display:grid;place-items:center;font-size:22px}
+.pro p{margin:0;font-size:17px;line-height:1.5;text-wrap:balance}
+.pro em{font-style:normal;font-family:var(--display);font-size:26px;color:var(--amber)}
+.pro span{font-size:12px;letter-spacing:.08em;opacity:.75}
 .notice{background:var(--amber-soft);border-radius:10px;padding:14px 16px;font-size:13px}
 .notice ul{margin:6px 0 0;padding-left:18px}
 footer{font-size:12px;color:var(--muted);text-align:center}
@@ -210,6 +215,11 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     </ul>
   </div>
 
+  <div class="pro">
+    <div class="pro-mark" aria-hidden="true">⚡</div>
+    <p><b>캠핑·차박 파워뱅크 전문가</b>가<br><em>직접 상담하고 직접 설치합니다</em></p>
+    <span>캠핑큐브플러스</span>
+  </div>
   <footer>캠핑큐브플러스 · 웨버 공식 브랜드샵 · 파워뱅크 주행충전기 설치</footer>
 </div>
 
