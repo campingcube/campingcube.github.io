@@ -156,6 +156,8 @@ input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .install-txt b{font-size:15px;color:var(--fg)}
 .install-btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:9px 16px;background:var(--amber);color:#232323;cursor:pointer;flex:none}
 .install-btn[hidden]{display:none!important}
+.show-install{font:inherit;font-size:14px;font-weight:700;align-self:center;border:1.5px solid var(--forest);background:transparent;color:var(--fg);border-radius:999px;padding:9px 18px;cursor:pointer}
+.show-install[hidden]{display:none!important}
 .install-x{font:inherit;border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;flex:none;padding:4px}
 .notice{background:var(--amber-soft);border-radius:10px;padding:14px 16px;font-size:13px}
 .notice ul{margin:6px 0 0;padding-left:18px}
@@ -259,6 +261,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     <p><b>캠핑·차박 파워뱅크 전문가</b>가<br><em>직접 상담하고 직접 설치합니다</em></p>
     <span>캠핑큐브플러스</span>
   </div>
+  <button type="button" class="show-install" id="showInstall" hidden>📲 이 계산기를 앱으로 설치하기</button>
   <footer>캠핑큐브플러스 · 웨버 공식 브랜드샵 · 파워뱅크 주행충전기 설치</footer>
 </div>
 
@@ -467,19 +470,22 @@ renderTabs();renderModels();renderPreset();refresh();
   const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
   if("serviceWorker" in navigator&&!inFrame){navigator.serviceWorker.register("sw.js").catch(()=>{});}
   if(inFrame||standalone) return; // 블로그 안이나 이미 설치된 앱에서는 안내 안 함
-  let closed=false; try{closed=localStorage.getItem("ccInstallClosed")==="1";}catch(_){}
-  if(closed) return;
   const box=$("install"), btn=$("installBtn"), hint=$("installHint");
+  $("showInstall").hidden=false;
+  $("showInstall").addEventListener("click",()=>{try{localStorage.removeItem("ccInstallClosed");}catch(_){}
+    if(!deferred){btn.hidden=true; if(!isMobile) hint.textContent="폰에서 이 페이지를 열면 홈 화면에 앱으로 설치할 수 있어요.";}
+    box.hidden=false; box.scrollIntoView({behavior:"smooth",block:"center"});});
+  let closed=false; try{const t=+localStorage.getItem("ccInstallClosed"); closed=t>0&&Date.now()-t<7*864e5;}catch(_){}
   const ua=navigator.userAgent;
   const isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
   const isMobile=isIOS||/Android/i.test(ua);
   let deferred=null;
-  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;btn.hidden=false;box.hidden=false;hint.textContent="홈 화면에 추가하면 앱처럼 바로 열 수 있어요. 캠핑장에서 인터넷이 안 돼도 쓸 수 있어요.";});
+  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;btn.hidden=false;if(!closed)box.hidden=false;hint.textContent="홈 화면에 추가하면 앱처럼 바로 열 수 있어요. 캠핑장에서 인터넷이 안 돼도 쓸 수 있어요.";});
   if(isIOS){
-    box.hidden=false; btn.hidden=true;
+    box.hidden=closed; btn.hidden=true;
     hint.textContent="아래쪽 공유 버튼(□↑)을 누르고 '홈 화면에 추가'를 선택하세요. 앱처럼 바로 열 수 있어요.";
   } else if(isMobile){
-    box.hidden=false; btn.hidden=true;
+    box.hidden=closed; btn.hidden=true;
     hint.textContent="브라우저 메뉴(⋮)에서 '홈 화면에 추가' 또는 '앱 설치'를 누르세요.";
   }
   btn.addEventListener("click",async()=>{
@@ -488,7 +494,7 @@ renderTabs();renderModels();renderPreset();refresh();
     try{const r=await deferred.userChoice; if(r.outcome==="accepted") box.hidden=true;}catch(_){}
     deferred=null;
   });
-  $("installX").addEventListener("click",()=>{box.hidden=true;try{localStorage.setItem("ccInstallClosed","1");}catch(_){}});
+  $("installX").addEventListener("click",()=>{box.hidden=true;try{localStorage.setItem("ccInstallClosed",String(Date.now()));}catch(_){}});
   window.addEventListener("appinstalled",()=>{box.hidden=true;});
 })();
 // 블로그 등 다른 페이지 안에 넣었을 때 높이를 알려줘서 창 크기가 자동으로 맞춰지게 함
