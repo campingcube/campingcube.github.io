@@ -160,7 +160,7 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     <div class="reco" id="reco" hidden></div>
     <div class="promo" id="promo">
       <span class="promo-badge">혜택</span>
-      <p><b>파워뱅크 + 주행충전기</b>를 함께 구매하시면 <b class="free">설치비 무료!</b><br><span>국산 SUV, 카니발, 스타리아 기준이며, 매립형 배터리는 제외돼요. 차를 모는 동안 파워뱅크가 자동으로 충전돼요. 자세한 내용은 매장에 문의해 주세요.</span></p>
+      <p><b>잭커리 파워뱅크 + 주행충전기</b>를 함께 구매하시면 <b class="free">설치비 무료!</b><br><span>국산 SUV, 카니발, 스타리아 기준이에요. 차를 모는 동안 파워뱅크가 자동으로 충전돼요. 자세한 내용은 매장에 문의해 주세요.</span></p>
     </div>
     <a class="buy" id="buy" href="#" target="_blank" rel="noopener"><span class="n">N</span><span id="buyText">스마트스토어에서 구매하기</span></a>
   </div>
@@ -339,7 +339,7 @@ function calc(){
     else{reco.hidden=false;reco.innerHTML=`<p>이 사용량은 휴대용 한 대로는 부족해요. 매장에 문의하시면 맞는 구성을 추천해 드려요.</p>`;}
   } else reco.hidden=true;
 
-  $("promo").hidden=m.brand==="MD홍"; // 매립형은 설치비 무료 대상 아님
+  $("promo").hidden=m.brand!=="잭커리"; // 주행충전기 무료 설치는 잭커리만 (루트웨이는 주행충전기 미출시, MD홍 매립형은 제외)
   $("buy").href=m.url;
   $("buyText").textContent=`${m.name} 스마트스토어에서 구매하기`;
 }
