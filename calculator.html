@@ -8,6 +8,14 @@
 <meta property="og:description" content="내 캠핑에 맞는 파워뱅크 용량을 바로 계산해 보세요.">
 <meta property="og:image" content="https://campingcube.github.io/og.jpg">
 <link rel="canonical" href="https://campingcube.github.io/calculator.html">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#232323">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="파워뱅크 계산기">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>파워뱅크 사용시간 계산기</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -141,6 +149,14 @@ input[type=number]{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .pro p{margin:0;font-size:17px;line-height:1.5;text-wrap:balance}
 .pro em{font-style:normal;font-family:var(--display);font-size:26px;color:var(--amber)}
 .pro span{font-size:12px;letter-spacing:.08em;opacity:.75}
+.install{background:var(--surface);border:1.5px solid var(--forest);border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px}
+.install[hidden]{display:none!important}
+.install img{border-radius:10px;flex:none}
+.install-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--muted)}
+.install-txt b{font-size:15px;color:var(--fg)}
+.install-btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:9px 16px;background:var(--amber);color:#232323;cursor:pointer;flex:none}
+.install-btn[hidden]{display:none!important}
+.install-x{font:inherit;border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;flex:none;padding:4px}
 .notice{background:var(--amber-soft);border-radius:10px;padding:14px 16px;font-size:13px}
 .notice ul{margin:6px 0 0;padding-left:18px}
 footer{font-size:12px;color:var(--muted);text-align:center}
@@ -156,6 +172,13 @@ footer{font-size:12px;color:var(--muted);text-align:center}
     <h1>파워뱅크 사용시간 계산기</h1>
     <p class="lead">파워뱅크 모델을 고르고, 캠핑·차박에서 쓸 기기를 담으면 며칠 밤 쓸 수 있는지 알려드려요.</p>
   </header>
+
+  <div class="install" id="install" hidden>
+    <img src="icons/icon-192.png" alt="" width="44" height="44">
+    <div class="install-txt"><b>앱으로 설치하기</b><span id="installHint">홈 화면에 추가하면 앱처럼 바로 열 수 있어요. 캠핑장에서 인터넷이 안 돼도 쓸 수 있어요.</span></div>
+    <button type="button" class="install-btn" id="installBtn">설치</button>
+    <button type="button" class="install-x" id="installX" aria-label="설치 안내 닫기">×</button>
+  </div>
 
   <section>
     <h2><span class="step">1</span>파워뱅크 모델 고르기</h2>
@@ -437,6 +460,37 @@ $("cAdd").addEventListener("click",()=>{
   refresh();
 });
 renderTabs();renderModels();renderPreset();refresh();
+
+// ===== 앱 설치(홈 화면에 추가) =====
+(function(){
+  const inFrame=window.parent!==window;
+  const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  if("serviceWorker" in navigator&&!inFrame){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+  if(inFrame||standalone) return; // 블로그 안이나 이미 설치된 앱에서는 안내 안 함
+  let closed=false; try{closed=localStorage.getItem("ccInstallClosed")==="1";}catch(_){}
+  if(closed) return;
+  const box=$("install"), btn=$("installBtn"), hint=$("installHint");
+  const ua=navigator.userAgent;
+  const isIOS=/iPhone|iPad|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  const isMobile=isIOS||/Android/i.test(ua);
+  let deferred=null;
+  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;btn.hidden=false;box.hidden=false;hint.textContent="홈 화면에 추가하면 앱처럼 바로 열 수 있어요. 캠핑장에서 인터넷이 안 돼도 쓸 수 있어요.";});
+  if(isIOS){
+    box.hidden=false; btn.hidden=true;
+    hint.textContent="아래쪽 공유 버튼(□↑)을 누르고 '홈 화면에 추가'를 선택하세요. 앱처럼 바로 열 수 있어요.";
+  } else if(isMobile){
+    box.hidden=false; btn.hidden=true;
+    hint.textContent="브라우저 메뉴(⋮)에서 '홈 화면에 추가' 또는 '앱 설치'를 누르세요.";
+  }
+  btn.addEventListener("click",async()=>{
+    if(!deferred) return;
+    deferred.prompt();
+    try{const r=await deferred.userChoice; if(r.outcome==="accepted") box.hidden=true;}catch(_){}
+    deferred=null;
+  });
+  $("installX").addEventListener("click",()=>{box.hidden=true;try{localStorage.setItem("ccInstallClosed","1");}catch(_){}});
+  window.addEventListener("appinstalled",()=>{box.hidden=true;});
+})();
 // 블로그 등 다른 페이지 안에 넣었을 때 높이를 알려줘서 창 크기가 자동으로 맞춰지게 함
 if(window.parent!==window){
   const sendH=()=>{try{parent.postMessage({ccCalcHeight:Math.ceil(document.querySelector(".wrap").getBoundingClientRect().bottom+window.scrollY+48)},"*");}catch(_){}};
