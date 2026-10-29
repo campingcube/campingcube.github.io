@@ -59,6 +59,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 .tags{display:flex;flex-wrap:wrap;gap:4px}
 .tag{font-size:11px;font-weight:700;padding:1px 7px;border-radius:4px;background:var(--amber);color:#232323}
 .pick{font-size:11px;font-weight:700;color:var(--forest)}
+.consult{grid-column:1/-1;background:var(--surface);border:1.5px solid var(--forest);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.consult p{margin:0;font-size:14px}
+.consult .phone{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.consult .phone a{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--fg);text-decoration:none;background:var(--amber-soft);border-radius:8px;padding:6px 12px;user-select:all}
 
 /* result */
 .result{background:var(--panel);color:var(--on-forest);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
@@ -226,7 +230,8 @@ const MODELS=[
   {id:"m300",brand:"MD홍",name:"MD홍 12V 300A",wh:3840,out:null,kg:"29.4kg",tags:["매립형","인버터 별도"],url:"https://mkt.shopping.naver.com/link/68a6b2096fbfe21835344de3"},
   {id:"m600",brand:"MD홍",name:"MD홍 12V 600A",wh:7680,out:null,kg:"58kg",tags:["매립형","인버터 별도"],url:"https://mkt.shopping.naver.com/link/6ae2f845328cd82d6d952571"}
 ];
-const BRANDS=["잭커리","루트웨이","MD홍"];
+const BRANDS=["잭커리","GSP","루트웨이","MD홍"];
+const PHONE="031-8071-2248";
 const PRESETS=[
   {id:"matusb",name:"USB 전기장판 (1인용)",note:"저전력 제품",w:18,h:8},
   {id:"mat1",name:"전기장판 (1인용)",note:"",w:55,h:8},
@@ -272,6 +277,18 @@ function renderTabs(){
   $("tabs").innerHTML=BRANDS.map(b=>`<button type="button" class="tab" data-brand="${b}" aria-pressed="${b===brand}">${b}</button>`).join("");
 }
 function renderModels(){
+  if(brand==="GSP"){
+    $("models").innerHTML=`<div class="consult">
+      <div class="ctitle">GSP 파워뱅크는 전화 상담 후 안내해 드려요</div>
+      <p>차량과 캠핑 스타일에 맞는 모델을 직접 추천해 드려요. GSP 파워뱅크도 주행충전기와 함께 구매하시면 설치비가 무료예요 (국산 SUV, 카니발, 스타리아 기준).</p>
+      <div class="phone"><a href="tel:${PHONE.replace(/-/g,"")}">📞 ${PHONE}</a><button type="button" class="ghost" id="copyPhone">번호 복사</button></div>
+      <p class="hint">위 계산 결과는 지금 선택된 모델(${getModel(sel).name}) 기준이에요.</p>
+    </div>`;
+    $("copyPhone").addEventListener("click",e=>{const b=e.currentTarget;
+      const done=()=>{b.textContent="복사됨";setTimeout(()=>b.textContent="번호 복사",1500);};
+      try{navigator.clipboard.writeText(PHONE).then(done,()=>{b.textContent=PHONE;});}catch(_){b.textContent=PHONE;}});
+    return;
+  }
   $("models").innerHTML=MODELS.filter(m=>m.brand===brand).map(m=>`
     <button type="button" class="model" data-model="${m.id}" aria-pressed="${m.id===sel}">
       <span class="mname">${m.name}</span>
