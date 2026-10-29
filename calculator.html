@@ -437,6 +437,12 @@ $("cAdd").addEventListener("click",()=>{
   refresh();
 });
 renderTabs();renderModels();renderPreset();refresh();
+// 블로그 등 다른 페이지 안에 넣었을 때 높이를 알려줘서 창 크기가 자동으로 맞춰지게 함
+if(window.parent!==window){
+  const sendH=()=>{try{parent.postMessage({ccCalcHeight:document.documentElement.scrollHeight},"*");}catch(_){}};
+  try{new ResizeObserver(sendH).observe(document.body);}catch(_){setInterval(sendH,1000);}
+  sendH();
+}
 </script>
 
 </body>
