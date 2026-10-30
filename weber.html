@@ -408,11 +408,17 @@ function score(m, q){
   if (m.ask) s -= 1;
   return {m, s, r};
 }
-function renderRec(){
+// 연료를 여러 개 고르면 고른 연료마다 가장 잘 맞는 모델이 한 자리씩 들어가게 한다
+// (점수만으로 자르면 같은 점수일 때 목록 앞쪽의 숯·가스만 남는다)
+function pickTop(sorted, fuels){
+  const picks = fuels.length > 1 ? fuels.map(f => sorted.find(x => x.m.fuel === f)).filter(x => x && x.s >= 0) : [];
+  for (const x of sorted) { if (picks.length >= 3) break; if (!picks.includes(x)) picks.push(x); }
+  return picks.slice(0, 3).sort((a,b) => b.s - a.s);
+}function renderRec(){
   budgetOut.textContent = (budget.value/10000).toLocaleString('ko-KR') + '만원';
   const q = {people: vals('people')[0], place: vals('place')[0], fuel: vals('fuel'), dish: vals('dish'), budget: +budget.value};
   ls.set('wg-guide-rec', {people:[q.people], place:[q.place], fuel:q.fuel, dish:q.dish, budget:q.budget});
-  const ranked = MODELS.map(m => score(m, q)).sort((a,b) => b.s - a.s).slice(0,3);
+  const ranked = pickTop(MODELS.map(m => score(m, q)).sort((a,b) => b.s - a.s), q.fuel);
   document.getElementById('recs').innerHTML = ranked.map((x,i) => `<article class="rec ${i===0?'top':''}">
     <div class="rec-head"><div><span class="rank">${i===0?'가장 잘 맞아요':(i+1)+'번째 추천'}</span><div class="rec-name">${x.m.name}</div></div><div>${priceBlock(x.m)}</div></div>
     ${tagsHtml(x.m)}
