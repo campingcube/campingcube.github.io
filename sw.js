@@ -1,6 +1,6 @@
 // 캠핑큐브 파워뱅크 계산기 — 인터넷이 안 될 때도 계산기가 열리도록 저장해 두는 파일
 // 계산기 파일만 다루고, 홈페이지의 다른 페이지는 건드리지 않아요.
-const CACHE = "cc-calc-v12";
+const CACHE = "cc-calc-v13";
 const FILES = [
   "./calculator.html",
   "./manifest.webmanifest",
