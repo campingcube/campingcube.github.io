@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>웨버 그릴 고르기 | 캠핑큐브플러스</title>
+<meta name="description" content="인원, 장소, 요리 스타일을 고르면 나에게 맞는 웨버 그릴과 세트, 예상 금액을 알려 드립니다. camping_cube 스마트스토어 구매 안내.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Gothic+A1:wght@400;600;800&display=swap">
+<style>
+/* Layout: customer shopping guide — cast-iron header band, sticky tabs, one question panel beside live results; enamel-red accent on cool steel neutrals */
+:root{
+  --bg:#eef0f2; --surface:#ffffff; --sunk:#e3e6ea; --line:#cfd4da;
+  --fg:#1d2228; --muted:#5b6570; --accent:#c23b1f; --accent-fg:#ffffff; --accent-soft:#f6e1da;
+  --good:#2e7d4f; --warn:#a26a00; --bad:#b3261e; --band:#1d2228; --band-fg:#eef0f2;
+  --display:"Barlow Condensed","Gothic A1",system-ui,sans-serif;
+  --body:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15181c; --surface:#1e2227; --sunk:#262b31; --line:#353c44;
+  --fg:#e8ebee; --muted:#9aa4ae; --accent:#ef6a48; --accent-fg:#1a0d08; --accent-soft:#3a221b;
+  --good:#5fc48a; --warn:#e3a93a; --bad:#f07b72; --band:#0d0f12; --band-fg:#e8ebee; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15181c; --surface:#1e2227; --sunk:#262b31; --line:#353c44;
+  --fg:#e8ebee; --muted:#9aa4ae; --accent:#ef6a48; --accent-fg:#1a0d08; --accent-soft:#3a221b;
+  --good:#5fc48a; --warn:#e3a93a; --bad:#f07b72; --band:#0d0f12; --band-fg:#e8ebee; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--band);color:var(--band-fg)}
+header.top .wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-block:24px 18px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,6vw,44px);letter-spacing:.01em;margin:0;line-height:1}
+h1 small{display:block;font-family:var(--body);font-size:13px;font-weight:600;letter-spacing:.08em;opacity:.7;margin-bottom:6px}
+.top p{margin:8px 0 0;font-size:14px;opacity:.8;max-width:46ch}
+.btn{appearance:none;display:inline-block;text-decoration:none;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:600 14px var(--body);padding:9px 14px;border-radius:6px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn.store{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn:hover{filter:brightness(1.05)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs button{appearance:none;border:0;background:none;color:var(--muted);font:600 15px var(--body);padding:14px 14px 12px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main .wrap{padding-block:24px 48px}
+h2{font-family:var(--display);font-size:26px;font-weight:700;margin:0 0 4px;text-wrap:balance}
+.lede{color:var(--muted);margin:0 0 20px;max-width:65ch}
+.label{font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px}
+fieldset{border:0;margin:0 0 18px;padding:0}
+legend{font-weight:800;margin-bottom:8px;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-block;padding:7px 12px;border:1px solid var(--line);border-radius:999px;cursor:pointer;background:var(--surface);font-size:14px;user-select:none}
+.chip input:checked+span{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.chip input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.range-row{display:flex;align-items:center;gap:12px}
+.range-row input{flex:1;accent-color:var(--accent);min-width:0}
+.range-row output{font-family:var(--display);font-size:22px;font-weight:700;min-width:5.5em;text-align:right;font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted)}
+.recs{display:grid;gap:14px}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:10px}
+.rec.top{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.rec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px}
+.rec-name{font-family:var(--display);font-size:24px;font-weight:700;line-height:1.1}
+.rank{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--accent);margin-bottom:2px}
+.price{font-family:var(--display);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+s{color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;padding:2px 8px;border-radius:4px;background:var(--sunk);color:var(--muted);font-weight:600}
+.tag.warn{background:var(--accent-soft);color:var(--bad)}
+.reasons{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:14px}
+.reasons li{display:flex;gap:8px}
+.reasons .p{color:var(--good);font-weight:800}
+.reasons .n{color:var(--warn);font-weight:800}
+.why{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:14px}
+.why b,.set b{display:block;font-size:12px;letter-spacing:.06em;color:var(--accent);margin-bottom:2px}
+.set{border:1px dashed var(--accent);border-radius:8px;padding:10px 12px;font-size:14px;font-variant-numeric:tabular-nums}
+.set strong{color:var(--accent)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:8px;align-content:start}
+.card .rec-name{font-size:21px}
+.card .price{text-align:left;font-size:22px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.field{display:grid;gap:4px;margin-bottom:12px}
+.field label{font-size:13px;font-weight:600}
+.field select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);width:100%}
+.acc{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px 10px;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.acc:last-child{border-bottom:0}
+.acc input[type=number]{width:3.6em;font:inherit;padding:4px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg);text-align:center}
+.acc .num{font-variant-numeric:tabular-nums;color:var(--muted);min-width:5.5em;text-align:right}
+.acc input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+.receipt{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;font-variant-numeric:tabular-nums}
+.receipt .r-title{font-family:var(--display);font-size:24px;font-weight:700;margin:0 0 10px}
+.line{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px}
+.line span:first-child{min-width:0}
+.line.save{color:var(--good)}
+.line.total{border-top:2px solid var(--fg);margin-top:6px;padding-top:12px;font-weight:800;font-size:18px}
+.line.total span:last-child{font-family:var(--display);font-size:28px;color:var(--accent)}
+textarea#q-text{width:100%;min-height:8em;font:13px/1.5 var(--body);margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.toast{font-size:13px;color:var(--good);font-weight:600;align-self:center}
+.faq{display:grid;gap:10px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 16px}
+summary{cursor:pointer;padding:14px 0;font-weight:800;list-style:none}
+summary::-webkit-details-marker{display:none}
+details[open] summary{border-bottom:1px solid var(--line)}
+details .ans{padding:12px 0 16px;max-width:70ch}
+details .ans p{margin:0 0 8px}
+footer{border-top:1px solid var(--line);background:var(--surface)}
+footer .wrap{padding-block:20px 28px;display:grid;gap:6px;font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.rec{animation:in .25s ease both}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div>
+      <h1><small>캠핑큐브플러스 구매 가이드</small>웨버 그릴 고르기</h1>
+      <p>몇 가지만 고르면 나에게 맞는 웨버 그릴과 세트, 예상 금액을 알려 드립니다.</p>
+    </div>
+    <div class="actions">
+      <a class="btn" href="https://campingcube.github.io/" style="background:transparent;color:inherit">홈으로</a>
+      <a class="btn store" id="store-top" href="#" target="_blank" rel="noopener">스마트스토어 바로가기</a>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="메뉴">
+  <div class="wrap" role="tablist">
+    <button role="tab" data-tab="find" aria-selected="true">나에게 맞는 그릴</button>
+    <button role="tab" data-tab="models" aria-selected="false">전체 모델</button>
+    <button role="tab" data-tab="cost" aria-selected="false">예상 금액 계산</button>
+    <button role="tab" data-tab="faq" aria-selected="false">자주 묻는 질문</button>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+
+<section data-panel="find">
+  <h2>나에게 맞는 그릴</h2>
+  <p class="lede">질문에 답하면 바로 오른쪽(휴대폰에서는 아래)에 잘 맞는 모델 세 개가 나옵니다.</p>
+  <div class="grid2">
+    <form class="panel" id="rec-form" onsubmit="return false">
+      <fieldset><legend>보통 몇 명이 함께 드시나요?</legend><div class="chips" id="f-people"></div></fieldset>
+      <fieldset><legend>어디서 구우실 건가요?</legend><div class="chips" id="f-place"></div></fieldset>
+      <fieldset><legend>원하는 연료 <span class="note">(여러 개 선택 가능)</span></legend><div class="chips" id="f-fuel"></div></fieldset>
+      <fieldset><legend>하고 싶은 요리 <span class="note">(여러 개)</span></legend><div class="chips" id="f-dish"></div></fieldset>
+      <fieldset>
+        <legend><label for="f-budget">그릴 예산</label></legend>
+        <div class="range-row"><input type="range" id="f-budget" min="100000" max="3500000" step="50000" value="500000"><output id="f-budget-out"></output></div>
+      </fieldset>
+      <button type="button" class="btn" id="rec-reset">처음부터 다시</button>
+    </form>
+    <div class="recs" id="recs" aria-live="polite"></div>
+  </div>
+</section>
+
+<section data-panel="models" hidden>
+  <h2>전체 모델</h2>
+  <p class="lede">캠핑큐브플러스에서 판매하는 웨버 그릴입니다. 취소선 가격은 웨버코리아 공식몰 정가입니다.</p>
+  <div class="filters"><span class="label">연료</span><div class="chips" id="m-fuel"></div></div>
+  <div class="cards" id="model-cards"></div>
+</section>
+
+<section data-panel="cost" hidden>
+  <h2>예상 금액 계산</h2>
+  <p class="lede">그릴이나 세트를 고르고 필요한 액세서리를 더하면 합계가 나옵니다. 목록을 복사해서 스토어 톡톡 문의에 붙여 넣으시면 상담이 빨라집니다.</p>
+  <div class="grid2">
+    <div class="panel">
+      <div class="field"><label for="q-model">그릴 또는 세트</label><select id="q-model"></select></div>
+      <div class="label" style="margin:14px 0 4px">이 그릴에 맞는 액세서리</div>
+      <div id="q-acc"></div>
+    </div>
+    <div>
+      <div class="receipt" id="receipt"></div>
+      <div class="actions" style="margin-top:14px">
+        <a class="btn store" id="store-cost" href="#" target="_blank" rel="noopener">스마트스토어에서 구매하기</a>
+        <button class="btn" type="button" id="q-copy">목록 복사</button>
+        <span class="toast" id="q-toast" hidden></span>
+      </div>
+      <textarea id="q-text" readonly hidden aria-label="복사용 목록"></textarea>
+    </div>
+  </div>
+</section>
+
+<section data-panel="faq" hidden>
+  <h2>자주 묻는 질문</h2>
+  <p class="lede">처음 웨버 그릴을 고르실 때 많이 물어보시는 내용입니다.</p>
+  <div class="faq" id="faq-list"></div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>이 페이지는 캠핑큐브플러스가 만든 구매 안내이며, 웨버 공식 페이지가 아닙니다.</div>
+    <div>가격은 2026년 10월 30일 기준입니다. 실제 판매가와 재고는 스마트스토어에서 확인해 주세요.</div>
+    <div>스토어 주소: <span id="store-url"></span></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+const STORE_URL = 'https://smartstore.naver.com/camping_cube';
+const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
+const ls = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+['store-top','store-cost'].forEach(id => document.getElementById(id).href = STORE_URL);
+document.getElementById('store-url').textContent = STORE_URL;
+
+/* ---------- 상품 데이터: price = 스토어 판매가, official = 웨버코리아 공식몰 정가 (2026-10-30) ---------- */
+const MODELS = [
+  {id:'smokey-joe', name:'스모키죠 프리미엄', fuel:'숯', size:'37cm 포터블 케틀', people:[1,3], official:139000, price:128050, portable:true, smoke:1, family:'smokey',
+   desc:'2~3명 캠핑에 알맞은 작은 숯 케틀입니다. 숯이 적게 들고 가벼워서 들고 다니기 편하고, 웨버 숯불 맛을 가장 부담 없이 시작할 수 있어요.'},
+  {id:'go-anywhere', name:'고애니웨어 차콜', fuel:'숯', size:'사각 포터블', people:[1,3], official:139000, price:136000, portable:true, smoke:0, family:'goanywhere',
+   desc:'다리가 뚜껑 고정 손잡이를 겸해서 이동이 쉽습니다. 사각형이라 차 트렁크에 싣기 좋아요.'},
+  {id:'jumbo-joe', name:'점보죠 차콜', fuel:'숯', size:'47cm 포터블 케틀', people:[2,5], official:199000, price:185050, portable:true, smoke:1, family:'jumbo',
+   desc:'들고 다니는 케틀 중 가장 큽니다. 스모키죠는 작고 57cm는 부담스러운 4인 가족 캠핑에 맞아요.'},
+  {id:'compact-47', name:'컴팩트 케틀 47cm', fuel:'숯', size:'47cm 케틀', people:[2,4], official:219000, price:204050, smoke:2, family:'kettle47',
+   desc:'마당에 두고 쓰는 웨버 케틀 중 가장 가격 부담이 적습니다. 직화와 뚜껑 덮는 간접구이가 모두 됩니다.'},
+  {id:'compact-57', name:'컴팩트 케틀 57cm', fuel:'숯', size:'57cm 케틀', people:[3,6], official:279000, price:261050, smoke:2, family:'kettle57',
+   desc:'오리지널 케틀과 같은 57cm 조리면을 더 낮은 가격에 쓸 수 있는 가성비 모델입니다.'},
+  {id:'kettle-47', name:'오리지널 케틀 47cm', fuel:'숯', size:'47cm 케틀', people:[2,4], official:299000, price:280050, smoke:2, family:'kettle47',
+   desc:'손잡이를 돌리면 재가 아래로 떨어지는 원터치 청소가 들어 있어 뒷정리가 쉽습니다. 2~4인 가족에 알맞아요.'},
+  {id:'kettle-57', name:'오리지널 케틀 57cm', fuel:'숯', size:'57cm 케틀', people:[3,6], official:359000, price:355000, smoke:2, family:'kettle57', ask:true,
+   desc:'웨버를 대표하는 그릴입니다. 직화·간접구이·훈연이 다 되고, 오래된 구조라 부품 구하기도 쉽습니다.'},
+  {id:'kettle-premium-57', name:'오리지널 케틀 프리미엄 57cm', fuel:'숯', size:'57cm 케틀', people:[3,8], official:459000, price:432050, smoke:2, family:'kettle57',
+   desc:'GBS 그레이트라 가운데를 빼고 주물 그리들, 시어 그레이트 같은 인서트를 끼워 쓸 수 있습니다. 케틀 하나로 가장 다양한 요리를 할 수 있어요.'},
+  {id:'performer', name:'퍼포머 프리미엄 57cm', fuel:'숯', size:'57cm 케틀 + 작업대', people:[4,8], official:900000, price:852000, smoke:2, family:'performer',
+   desc:'케틀에 넓은 작업대와 숯 보관함이 붙어 있어 손질부터 굽기까지 그릴 옆에서 끝납니다. 숯을 자주 쓰는 집에 좋아요.'},
+  {id:'smc-37', name:'스모키 마운틴 쿠커 37cm', fuel:'숯', size:'37cm 훈연기', people:[2,5], official:550000, price:546000, smoke:3, family:'smc',
+   desc:'훈연을 처음 해 보는 분께 맞는 크기입니다. 물받이가 온도를 잡아줘서 립이나 닭도 결과가 안정적이에요.'},
+  {id:'smc-47', name:'스모키 마운틴 쿠커 47cm', fuel:'숯', size:'47cm 훈연기', people:[4,8], official:750000, price:746000, smoke:3, family:'smc', ask:true,
+   desc:'2단 랙이라 립과 목살을 한 번에 훈연할 수 있습니다.'},
+  {id:'smc-57', name:'스모키 마운틴 쿠커 57cm', fuel:'숯', size:'57cm 훈연기', people:[6,12], official:1100000, price:1094000, smoke:3, family:'smc', ask:true,
+   desc:'브리스킷, 풀드포크처럼 오래 훈연하는 요리를 모임 단위로 할 수 있는 크기입니다.'},
+  {id:'kamado', name:'서밋 카마도 E6', fuel:'숯', size:'61cm 카마도', people:[4,10], official:2700000, price:2694000, smoke:3, family:'kamado',
+   desc:'이중벽 스틸이라 깨질 걱정이 없고 숯 효율이 좋습니다. 스테이크 시어링부터 장시간 훈연까지 한 대로 끝나요.'},
+  {id:'q2200n', name:'Q2200N 가스 그릴', fuel:'가스', size:'1버너 포터블', people:[2,5], official:759000, price:717050, portable:true, smoke:0, family:'q',
+   desc:'점화 버튼 한 번이면 금방 예열됩니다. 숯 피우기가 번거로운 분, 캠핑이나 테라스에서 빠르게 굽고 싶은 분께 좋아요.'},
+  {id:'q2800n', name:'Q2800N+ 가스 그릴', fuel:'가스', size:'2버너 포터블', people:[3,6], official:859000, price:812050, portable:true, smoke:1, family:'q',
+   desc:'버너가 두 개라 한쪽은 세게, 한쪽은 약하게 두고 간접구이까지 됩니다. Q 시리즈 중 요리 폭이 가장 넓어요.'},
+  {id:'traveler-compact', name:'트래블러 컴팩트', fuel:'가스', size:'접이식 카트형 (소)', people:[2,4], official:650000, price:613500, portable:true, smoke:0, family:'traveler', ask:true,
+   desc:'트래블러의 접이식 카트 구조 그대로 크기를 줄여 차에 싣기 더 쉽습니다.'},
+  {id:'traveler', name:'트래블러 (블랙)', fuel:'가스', size:'접이식 카트형', people:[2,6], official:750000, price:708500, portable:true, smoke:0, family:'traveler',
+   desc:'접으면 캐리어처럼 끌고 다닐 수 있는데 조리면은 가정용만큼 넓습니다. 여러 가족이 함께 가는 캠핑에 강해요.'},
+  {id:'traveler-color', name:'트래블러 블루·레드·스텔스', fuel:'가스', size:'접이식 카트형', people:[2,6], official:800000, price:756000, portable:true, smoke:0, family:'traveler',
+   desc:'성능은 트래블러 블랙과 같고 색만 다릅니다. 캠핑 장비 색을 맞추고 싶은 분께 좋아요.'},
+  {id:'slate-43', name:'슬레이트 43cm 가스 그리들', fuel:'가스', size:'43cm 철판 (탁상형)', people:[2,4], official:550000, price:518500, portable:true, smoke:0, family:'slate', griddle:true,
+   desc:'석쇠가 아니라 철판이라 볶음밥, 전, 계란, 해산물처럼 작은 재료도 떨어질 걱정이 없습니다. 캠핑 아침 메뉴에 특히 좋아요.'},
+  {id:'slate-76', name:'슬레이트 76cm 가스 그리들', fuel:'가스', size:'76cm 철판 카트형', people:[4,10], official:1650000, price:1644000, smoke:0, family:'slate', griddle:true,
+   desc:'넓은 철판에서 고기, 볶음밥, 야채를 한 번에 굽습니다. 손님이 많은 집에서 철판 요리를 즐기기 좋아요.'},
+  {id:'spirit-e315', name:'스피릿 E-315 가스 그릴', fuel:'가스', size:'3버너 카트형', people:[4,8], official:1790000, price:1784000, smoke:1, family:'spirit',
+   desc:'버너 세 개로 직화와 간접구이를 나눠 씁니다. 마당이나 테라스에 두고 주말마다 손님을 치르는 집에 맞아요.'},
+  {id:'genesis-epx335', name:'제네시스 SE-EPX-335', fuel:'가스', size:'3버너 스마트 대형', people:[6,12], official:3700000, price:3509000, smoke:1, family:'genesis',
+   desc:'한 번에 10인분 이상을 구울 수 있는 웨버 가스 그릴 최상위 모델입니다. 작업대도 넓어요.'},
+  {id:'lumin-compact', name:'루민 컴팩트 전기 그릴', fuel:'전기', size:'전기 포터블', people:[1,4], official:759000, price:756000, portable:true, smoke:0, family:'lumin-compact',
+   desc:'콘센트만 있으면 쓸 수 있어 가스나 숯을 쓰기 어려운 곳에 맞습니다. 연기가 적고 관리가 가장 쉬워요.'},
+  {id:'lumin', name:'루민 전기 그릴', fuel:'전기', size:'전기 (대)', people:[2,6], official:859000, price:856000, portable:true, smoke:0, family:'lumin', ask:true,
+   desc:'루민 컴팩트보다 조리면이 넓어 4인 이상 가족도 한 번에 굽습니다.'}
+];
+const ACCESSORIES = [
+  {id:'cover-57', name:'프리미엄 57 그릴 커버', price:54000, fit:['kettle57']},
+  {id:'cover-47', name:'프리미엄 47 그릴 커버', price:47350, fit:['kettle47']},
+  {id:'cover-performer', name:'퍼포머 프리미엄 57 그릴 커버', price:79600, fit:['performer']},
+  {id:'bag-smokey', name:'스모키죠 전용 가방', price:35000, fit:['smokey']},
+  {id:'bag-goanywhere', name:'고애니웨어 전용 가방', price:35000, fit:['goanywhere']},
+  {id:'grate-goanywhere', name:'고애니웨어 2pc 조리석쇠', price:39750, fit:['goanywhere']},
+  {id:'bag-jumbo', name:'점보죠 신형 가방', price:43550, fit:['jumbo']},
+  {id:'gbs-griddle', name:'GBS 주물 그리들', price:62550, fit:['kettle-premium-57','performer']},
+  {id:'gbs-sear', name:'GBS 시어 그레이트', price:71050, fit:['kettle-premium-57','performer']},
+  {id:'gbs-wok', name:'GBS 웍 & 스티머', price:124250, fit:['kettle-premium-57','performer']},
+  {id:'cart-q-premium', name:'Q시리즈 프리미엄 카트', price:327550, fit:['q']},
+  {id:'cart-q-portable', name:'Q시리즈 포터블 카트', price:213550, fit:['q']},
+  {id:'cover-traveler', name:'트래블러 프리미엄 그릴 커버', price:76750, fit:['traveler','traveler-color']},
+  {id:'cover-traveler-c', name:'트래블러 컴팩트 프리미엄 그릴 커버', price:70100, fit:['traveler-compact']},
+  {id:'griddle-traveler', name:'트래블러 그리들', price:100500, fit:['traveler']},
+  {id:'board-traveler', name:'트래블러 양면 도마', price:58750, fit:['traveler']},
+  {id:'cargo-traveler', name:'트래블러 카고 프로텍터', price:84200, fit:['traveler']},
+  {id:'cover-slate43', name:'슬레이트43 프리미엄 그릴 커버', price:49000, fit:['slate-43']},
+  {id:'cover-slate76', name:'슬레이트76 프리미엄 그릴 커버', price:104300, fit:['slate-76']},
+  {id:'works-slate', name:'슬레이트76 웍스 다용도 보관함', price:68250, fit:['slate-76']},
+  {id:'scraper', name:'그리들 스크래퍼', price:25650, fit:['slate']},
+  {id:'griddle-spirit', name:'스피릿 주물 그리들', price:110000, fit:['spirit']},
+  {id:'gbs-spirit', name:'스피릿 GBS 석쇠', price:114750, fit:['spirit']},
+  {id:'cover-genesis', name:'제네시스 그릴 커버', price:89100, fit:['genesis']},
+  {id:'cover-lumin', name:'루민 커버', price:51150, fit:['lumin','lumin-compact']},
+  {id:'stand-lumin-c', name:'루민 컴팩트 스탠드', price:177500, fit:['lumin-compact']},
+  {id:'griddle-lumin-c', name:'루민 컴팩트 주물 그리들', price:88200, fit:['lumin-compact']},
+  {id:'kit-lumin-c', name:'루민 컴팩트 다기능 확장 키트', price:130000, fit:['lumin-compact']},
+  {id:'stand-lumin', name:'루민 스탠드', price:206000, fit:['lumin']},
+  {id:'griddle-lumin', name:'루민 주물 그리들', price:101500, fit:['lumin']},
+  {id:'chimney-l', name:'차콜 착화통 대형', price:31200, fit:['숯']},
+  {id:'chimney-s', name:'차콜 착화통 소형', price:24790, fit:['숯']},
+  {id:'lighter', name:'라이터 큐브 착화제', price:10900, fit:['숯']},
+  {id:'charcoal-2.5', name:'웨버 바베큐 숯 2.5kg', price:12350, fit:['숯']},
+  {id:'chips-hickory', name:'훈연칩 히코리', price:10450, fit:['숯']},
+  {id:'chips-apple', name:'훈연칩 사과', price:10450, fit:['숯']},
+  {id:'drip-l', name:'드립팬 대형', price:18050, fit:['spirit','genesis','q']},
+  {id:'drip-s', name:'드립팬 소형', price:10450, fit:['q']},
+  {id:'pizza', name:'크래프트 피자스톤 신형', price:73000, fit:['kettle57','kettle47','performer','kamado','spirit','genesis']},
+  {id:'tongs', name:'프리미엄 바베큐 집게 신형', price:30250, fit:['*']},
+  {id:'gloves', name:'프리미엄 바베큐 장갑 세트', price:43550, fit:['*']},
+  {id:'thermo', name:'심부 온도계', price:27400, fit:['*']},
+  {id:'probe', name:'미트 프로브', price:30250, fit:['*']}
+];
+const SETS = [
+  {id:'set-smokey', model:'smokey-joe', name:'스모키죠37 + 전용가방 세트', price:155000, inc:['bag-smokey'], extra:[]},
+  {id:'set-goanywhere', model:'go-anywhere', name:'고애니웨어 + 전용가방 세트', price:155000, inc:['bag-goanywhere'], extra:[]},
+  {id:'set-compact-47', model:'compact-47', name:'컴팩트 케틀 47 세트', price:255000, inc:['chimney-l','cover-47','lighter'], extra:['차콜 브리켓 5kg']},
+  {id:'set-compact-57', model:'compact-57', name:'컴팩트 케틀 57 세트', price:315000, inc:['chimney-l','cover-57','lighter'], extra:['차콜 브리켓 5kg']},
+  {id:'set-kettle-premium-57', model:'kettle-premium-57', name:'오리지널 케틀 프리미엄 57cm 세트', price:475000, inc:['chimney-l','cover-57','lighter'], extra:['차콜 브리켓 5kg']}
+];
+const modelById = id => MODELS.find(m => m.id === id);
+const accById = id => ACCESSORIES.find(a => a.id === id);
+const fitRank = (a, m) => a.fit.includes(m.id) || a.fit.includes(m.family) ? 3 : a.fit.includes(m.fuel) ? 2 : a.fit.includes('*') ? 1 : 0;
+const accFor = m => ACCESSORIES.filter(a => fitRank(a, m)).sort((x, y) => fitRank(y, m) - fitRank(x, m));
+const setsFor = m => SETS.filter(s => s.model === m.id);
+const setSeparate = s => modelById(s.model).price + s.inc.reduce((t, id) => t + accById(id).price, 0);
+const setContents = s => [...s.inc.map(id => accById(id).name), ...s.extra].join(', ');
+const offPct = m => Math.round((1 - m.price / m.official) * 100);
+const priceBlock = m => `<div class="price">${won(m.price)}</div>${m.price < m.official ? `<div class="note" style="text-align:inherit"><s>${won(m.official)}</s> ${offPct(m)}%</div>` : ''}`;
+const tagsHtml = m => `<div class="tags"><span class="tag">${m.fuel}</span><span class="tag">${m.size}</span><span class="tag">${m.people[0]}~${m.people[1]}명</span>${m.portable?'<span class="tag">휴대용</span>':''}${m.ask?'<span class="tag warn">재고 문의</span>':''}</div>`;
+const setHtml = m => setsFor(m).map(s => { const sep = setSeparate(s); return `<div class="set"><b>세트로 사면</b>${s.name} <strong>${won(s.price)}</strong><br>
+  <span class="note">구성: 본체 + ${setContents(s)}</span>${sep > s.price ? `<br>따로 살 때 ${won(sep)} → <strong>${won(sep - s.price)} 아낌</strong>${s.extra.length ? ` (${s.extra.join(', ')}는 덤)` : ''}` : ''}</div>`; }).join('');
+
+/* ---------- 탭 ---------- */
+const tabs = [...document.querySelectorAll('[role=tab]')];
+function showTab(name){
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.tab === name));
+  document.querySelectorAll('[data-panel]').forEach(p => p.hidden = p.dataset.panel !== name);
+  try { history.replaceState(null, '', '#' + name); } catch(e){}
+}
+tabs.forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+
+function chips(el, name, options, type, checked){
+  el.innerHTML = options.map(o => `<label class="chip"><input type="${type}" name="${name}" value="${o}" ${checked.includes(o)?'checked':''}><span>${o}</span></label>`).join('');
+}
+const vals = name => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value);
+
+/* ---------- 추천 ---------- */
+const PEOPLE = ['1~2명','3~4명','5~6명','7명 이상'];
+const PEOPLE_N = {'1~2명':2,'3~4명':4,'5~6명':6,'7명 이상':9};
+const PLACE = ['아파트 베란다','주택 마당·테라스','캠핑·차박','옥상·펜션'];
+const FUEL = ['숯','가스','전기'];
+const DISH = ['스테이크·삼겹살','훈연·바비큐','철판·볶음 요리','캠핑 간편 구이','피자·베이킹','평일 빠른 요리'];
+const DEFAULT_REC = {people:['3~4명'], place:['캠핑·차박'], fuel:['숯','가스'], dish:['스테이크·삼겹살'], budget:500000};
+const budget = document.getElementById('f-budget'), budgetOut = document.getElementById('f-budget-out');
+function initRec(d){
+  chips(document.getElementById('f-people'),'people',PEOPLE,'radio',d.people);
+  chips(document.getElementById('f-place'),'place',PLACE,'radio',d.place);
+  chips(document.getElementById('f-fuel'),'fuel',FUEL,'checkbox',d.fuel);
+  chips(document.getElementById('f-dish'),'dish',DISH,'checkbox',d.dish);
+  budget.value = d.budget || 500000;
+}
+function score(m, q){
+  let s = 0; const r = [];
+  if (!q.fuel.length || q.fuel.includes(m.fuel)) { s += 4; if (q.fuel.length) r.push(['p', `원하시는 ${m.fuel} 연료`]); }
+  else { s -= 4; r.push(['n', `선택하지 않은 ${m.fuel} 연료`]); }
+  const n = PEOPLE_N[q.people] || 4;
+  if (n >= m.people[0] && n <= m.people[1]) { s += 3; r.push(['p', `${q.people}에 맞는 크기`]); }
+  else if (n > m.people[1]) { s -= Math.min(4, (n - m.people[1]) / 1.5); r.push(['n', `${q.people}이 쓰기에는 작은 편`]); }
+  else { s -= 1; r.push(['n', '인원에 비해 큰 편']); }
+  if (m.price <= q.budget) { s += 3; r.push(['p', '예산 안']); }
+  else if (m.price <= q.budget * 1.25) { s += 0.5; r.push(['n', `예산보다 ${won(m.price - q.budget)} 높음`]); }
+  else { s -= 3 + (m.price / q.budget - 1.25) * 2; r.push(['n', `예산보다 ${won(m.price - q.budget)} 높음`]); }
+  if (q.place === '아파트 베란다') {
+    if (m.fuel === '전기') { s += 4; r.push(['p', '전기식이라 베란다 사용에 유리']); }
+    else if (m.fuel === '숯') { s -= 4; r.push(['n', '숯은 실내·베란다에서 사용하면 안 됩니다']); }
+    else { s -= 1; r.push(['n', '공동주택은 화기 사용 규정 확인 필요']); }
+  }
+  if (q.place === '캠핑·차박') { if (m.portable) { s += 3; r.push(['p', '들고 다니기 좋은 휴대용']); } else { s -= 3; r.push(['n', '캠핑에 들고 가기엔 무거움']); } }
+  if ((q.place === '주택 마당·테라스' || q.place === '옥상·펜션') && !m.portable) { s += 1.5; r.push(['p', '고정 설치용 풀사이즈']); }
+  q.dish.forEach(d => {
+    if (d === '훈연·바비큐') { s += m.smoke; if (m.smoke >= 2) r.push(['p', '훈연·간접구이에 강함']); else if (m.smoke === 0) r.push(['n', '훈연은 어려움']); }
+    if (d === '평일 빠른 요리' && (m.fuel === '가스' || m.fuel === '전기')) { s += 2; r.push(['p', '버튼 점화로 예열이 빠름']); }
+    if (d === '캠핑 간편 구이' && m.portable) s += 1.5;
+    if (d === '피자·베이킹' && !m.portable) { s += 1; r.push(['p', '피자스톤 쓰기 좋은 크기']); }
+    if (d === '스테이크·삼겹살' && !m.griddle && (m.family === 'spirit' || m.family === 'genesis' || m.fuel === '숯')) s += 1;
+    if (d === '철판·볶음 요리') {
+      if (m.griddle) { s += 3; r.push(['p', '철판형이라 볶음·전 요리에 바로 사용']); }
+      else if (accFor(m).some(a => /그리들/.test(a.name))) { s += 1; r.push(['p', '전용 그리들을 더하면 철판 요리 가능']); }
+    }
+  });
+  if (m.ask) s -= 1;
+  return {m, s, r};
+}
+function renderRec(){
+  budgetOut.textContent = (budget.value/10000).toLocaleString('ko-KR') + '만원';
+  const q = {people: vals('people')[0], place: vals('place')[0], fuel: vals('fuel'), dish: vals('dish'), budget: +budget.value};
+  ls.set('wg-guide-rec', {people:[q.people], place:[q.place], fuel:q.fuel, dish:q.dish, budget:q.budget});
+  const ranked = MODELS.map(m => score(m, q)).sort((a,b) => b.s - a.s).slice(0,3);
+  document.getElementById('recs').innerHTML = ranked.map((x,i) => `<article class="rec ${i===0?'top':''}">
+    <div class="rec-head"><div><span class="rank">${i===0?'가장 잘 맞아요':(i+1)+'번째 추천'}</span><div class="rec-name">${x.m.name}</div></div><div>${priceBlock(x.m)}</div></div>
+    ${tagsHtml(x.m)}
+    <ul class="reasons">${x.r.map(([k,t]) => `<li><span class="${k}">${k==='p'?'＋':'−'}</span><span>${t}</span></li>`).join('')}</ul>
+    <div class="why"><b>이런 분께 좋아요</b>${x.m.desc}</div>
+    ${setHtml(x.m)}
+    <div class="actions">${setsFor(x.m).map(s => `<button class="btn primary" type="button" data-cost="${s.id}">세트 금액 보기</button>`).join('')}
+      <button class="btn ${setsFor(x.m).length?'':'primary'}" type="button" data-cost="${x.m.id}">액세서리 더해서 계산</button>
+      <a class="btn" href="${STORE_URL}" target="_blank" rel="noopener">스토어에서 보기</a></div>
+  </article>`).join('');
+}
+document.getElementById('rec-form').addEventListener('change', renderRec);
+budget.addEventListener('input', renderRec);
+document.getElementById('rec-reset').addEventListener('click', () => { initRec(DEFAULT_REC); renderRec(); });
+
+/* ---------- 전체 모델 ---------- */
+chips(document.getElementById('m-fuel'),'mfuel',['전체',...FUEL],'radio',['전체']);
+function renderModels(){
+  const f = vals('mfuel')[0] || '전체';
+  document.getElementById('model-cards').innerHTML = MODELS.filter(m => f==='전체' || m.fuel===f).map(m => `<article class="card">
+    <div class="rec-name">${m.name}</div>${priceBlock(m)}${tagsHtml(m)}
+    <div class="note">${m.desc}</div>${setHtml(m)}
+    <div class="actions"><button class="btn" type="button" data-cost="${setsFor(m)[0] ? setsFor(m)[0].id : m.id}">금액 계산</button></div>
+  </article>`).join('');
+}
+document.getElementById('m-fuel').addEventListener('change', renderModels);
+
+/* ---------- 예상 금액 ---------- */
+const cost = {model:'kettle-premium-57', set:'set-kettle-premium-57', acc:{'charcoal-2.5':1}};
+const qModel = document.getElementById('q-model');
+function pick(v){
+  const s = SETS.find(x => x.id === v);
+  cost.set = s ? s.id : ''; cost.model = s ? s.model : v;
+  const m = modelById(cost.model);
+  Object.keys(cost.acc).forEach(id => { const a = accById(id); if (!fitRank(a, m) || (s && s.inc.includes(id))) delete cost.acc[id]; });
+}
+function syncSelect(){
+  const cur = cost.set || cost.model;
+  const opt = (v, label) => `<option value="${v}" ${v===cur?'selected':''}>${label}</option>`;
+  qModel.innerHTML = `<optgroup label="세트 상품">${SETS.map(s => opt(s.id, `${s.name} — ${won(s.price)}`)).join('')}</optgroup>
+    <optgroup label="그릴 본체">${MODELS.map(m => opt(m.id, `${m.name} — ${won(m.price)}`)).join('')}</optgroup>`;
+}
+function renderAcc(){
+  const m = modelById(cost.model), s = SETS.find(x => x.id === cost.set);
+  document.getElementById('q-acc').innerHTML = accFor(m).filter(a => !s || !s.inc.includes(a.id)).map(a => `<div class="acc">
+    <input type="checkbox" id="acc-${a.id}" data-acc="${a.id}" ${cost.acc[a.id]?'checked':''}>
+    <label for="acc-${a.id}">${a.name}</label>
+    <input type="number" min="1" max="20" value="${cost.acc[a.id]||1}" data-qty="${a.id}" aria-label="${a.name} 수량">
+    <span class="num">${won(a.price)}</span></div>`).join('');
+  renderCost();
+}
+function calc(){
+  const m = modelById(cost.model), s = SETS.find(x => x.id === cost.set);
+  const lines = [s ? {name:`${s.name} (본체 + ${setContents(s)})`, qty:1, unit:s.price} : {name:m.name, qty:1, unit:m.price}];
+  accFor(m).forEach(a => { if (cost.acc[a.id] && !(s && s.inc.includes(a.id))) lines.push({name:a.name, qty:cost.acc[a.id], unit:a.price}); });
+  return {lines, total: lines.reduce((t,l) => t + l.qty*l.unit, 0), save: s ? Math.max(0, setSeparate(s) - s.price) : 0, ask: m.ask};
+}
+function renderCost(){
+  const c = calc();
+  document.getElementById('receipt').innerHTML = `<p class="r-title">예상 금액</p>
+    ${c.lines.map(l => `<div class="line"><span>${l.name}${l.qty>1?` × ${l.qty}`:''}</span><span>${won(l.qty*l.unit)}</span></div>`).join('')}
+    ${c.save ? `<div class="line save"><span>세트로 아낀 금액</span><span>${won(c.save)}</span></div>` : ''}
+    <div class="line total"><span>합계</span><span>${won(c.total)}</span></div>
+    <div class="note" style="margin-top:8px">배송비와 실제 판매가는 스토어에서 확인해 주세요.${c.ask ? ' 이 모델은 구매 전 재고를 문의해 주세요.' : ''}</div>`;
+}
+qModel.addEventListener('change', () => { pick(qModel.value); renderAcc(); });
+document.getElementById('q-acc').addEventListener('input', e => {
+  const t = e.target;
+  if (t.dataset.acc) { if (t.checked) cost.acc[t.dataset.acc] = +document.querySelector(`[data-qty="${t.dataset.acc}"]`).value || 1; else delete cost.acc[t.dataset.acc]; }
+  if (t.dataset.qty) { const id = t.dataset.qty; cost.acc[id] = Math.max(1, +t.value || 1); document.getElementById('acc-' + id).checked = true; }
+  renderCost();
+});
+document.getElementById('q-copy').addEventListener('click', () => {
+  const c = calc();
+  const text = ['[웨버 그릴 구매 문의]', ...c.lines.map(l => `· ${l.name}${l.qty>1?` ×${l.qty}`:''}  ${won(l.qty*l.unit)}`), `합계 ${won(c.total)}`].join('\n');
+  const ta = document.getElementById('q-text'), toast = document.getElementById('q-toast');
+  ta.value = text;
+  const done = ok => { toast.hidden = false; toast.textContent = ok ? '복사했습니다. 스토어 톡톡 문의에 붙여 넣으세요.' : '아래 글을 길게 눌러 복사하세요.'; ta.hidden = ok; if (!ok) { ta.focus(); ta.select(); } setTimeout(() => toast.hidden = true, 4000); };
+  try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch(e){ done(false); }
+});
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-cost]'); if (!b) return;
+  pick(b.dataset.cost); syncSelect(); renderAcc(); showTab('cost'); window.scrollTo(0, 0);
+});
+
+/* ---------- 자주 묻는 질문 ---------- */
+const FAQ = [
+  {q:'숯이랑 가스 중에 뭐가 나아요?', a:['숯불 향과 분위기를 원하시면 숯, 편하게 자주 굽고 싶으시면 가스입니다.','한 달에 네 번 이상 구우실 것 같으면 가스가 오래 쓰입니다. 캠핑이나 손님 올 때만 구우신다면 숯 케틀의 만족도가 높습니다.']},
+  {q:'아파트 베란다에서 써도 되나요?', a:['숯은 연기와 일산화탄소 때문에 실내나 막힌 베란다에서 쓰면 안 됩니다.','공동주택은 관리규약에 따라 화기 사용이 금지된 곳도 있으니 먼저 확인해 주세요. 사용할 수 있는 곳이라면 연기가 적은 전기 그릴(루민)이 가장 무난합니다.']},
+  {q:'몇 cm짜리를 사야 하나요?', a:['2~3명은 37cm나 휴대용, 4~6명은 57cm 케틀이나 3버너 가스, 8명 이상이 자주 모이면 대형 모델이 맞습니다.','고기와 채소를 한 번에 올리거나 간접구이를 하려면 한 단계 큰 크기가 편합니다. 간접구이는 불이 없는 자리가 필요하기 때문입니다.']},
+  {q:'세트로 사면 뭐가 좋아요?', a:['케틀 세트에는 전용 커버, 차콜 착화통(대), 라이터 큐브 착화제, 차콜 브리켓 5kg이 들어 있습니다. 처음 굽는 데 필요한 게 한 번에 갖춰지고, 따로 사는 것보다 저렴합니다.','추천 결과와 예상 금액 계산에서 세트로 아끼는 금액을 바로 확인하실 수 있습니다.']},
+  {q:'숯불 피우는 게 어렵지 않나요?', a:['차콜 착화통에 숯을 채우고 아래에 착화제 하나만 넣어 불을 붙이면 15~20분 뒤 바로 구울 수 있습니다. 부채질이나 토치가 필요 없어요.']},
+  {q:'청소는 어떻게 하나요?', a:['오리지널 케틀은 손잡이를 돌리면 재가 재받이로 떨어지는 원터치 방식이라 재받이만 비우면 됩니다.','가스 그릴은 예열 후 그레이트를 닦고, 기름받이 드립팬을 주기적으로 갈아 주세요.']},
+  {q:'훈연도 되나요?', a:['케틀도 숯을 한쪽에 몰고 반대편에 고기를 두면 간접구이와 훈연이 됩니다. 오래 훈연하는 요리를 자주 하신다면 스모키 마운틴 쿠커나 서밋 카마도가 맞습니다.']},
+  {q:'"재고 문의" 표시는 뭔가요?', a:['웨버 본사 재고가 적은 모델입니다. 구매 전에 스토어 톡톡으로 재고를 먼저 확인해 주세요.']}
+];
+document.getElementById('faq-list').innerHTML = FAQ.map(f => `<details><summary>${f.q}</summary><div class="ans">${f.a.map(p => `<p>${p}</p>`).join('')}</div></details>`).join('');
+
+/* ---------- 시작 ---------- */
+initRec(ls.get('wg-guide-rec', null) || DEFAULT_REC);
+renderRec(); renderModels(); syncSelect(); renderAcc();
+const start = (location.hash || '').slice(1);
+if (['find','models','cost','faq'].includes(start)) showTab(start);
+})();
+</script>
+
+</body>
+</html>
