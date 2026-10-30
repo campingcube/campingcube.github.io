@@ -184,7 +184,7 @@ footer .wrap{padding-block:20px 28px;display:grid;gap:6px;font-size:13px;color:v
 
 <section data-panel="cost" hidden>
   <h2>예상 금액 계산</h2>
-  <p class="lede">그릴이나 세트를 고르고 필요한 액세서리를 더하면 합계가 나옵니다. 목록을 복사해서 스토어 톡톡 문의에 붙여 넣으시면 상담이 빨라집니다.</p>
+  <p class="lede">그릴이나 세트를 고르고 필요한 액세서리를 더하면 합계가 나옵니다. 목록을 복사해서 스토어 톡톡 문의나 카카오톡 채팅에 붙여 넣으시면 상담이 빨라집니다.</p>
   <div class="grid2">
     <div class="panel">
       <div class="field"><label for="q-model">그릴 또는 세트</label><select id="q-model"></select></div>
@@ -496,7 +496,7 @@ document.getElementById('q-copy').addEventListener('click', () => {
   const text = ['[웨버 그릴 구매 문의]', ...c.lines.map(l => `· ${l.name}${l.qty>1?` ×${l.qty}`:''}  ${won(l.qty*l.unit)}`), `합계 ${won(c.total)}`].join('\n');
   const ta = document.getElementById('q-text'), toast = document.getElementById('q-toast');
   ta.value = text;
-  const done = ok => { toast.hidden = false; toast.textContent = ok ? '복사했습니다. 스토어 톡톡 문의에 붙여 넣으세요.' : '아래 글을 길게 눌러 복사하세요.'; ta.hidden = ok; if (!ok) { ta.focus(); ta.select(); } setTimeout(() => toast.hidden = true, 4000); };
+  const done = ok => { toast.hidden = false; toast.textContent = ok ? '복사했습니다. 스토어 톡톡 문의나 카카오톡 채팅에 붙여 넣으세요.' : '아래 글을 길게 눌러 복사하세요.'; ta.hidden = ok; if (!ok) { ta.focus(); ta.select(); } setTimeout(() => toast.hidden = true, 4000); };
   try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch(e){ done(false); }
 });
 document.addEventListener('click', e => {
