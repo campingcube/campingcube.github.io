@@ -389,7 +389,7 @@ function score(m, q){
   else { s -= 3 + (m.price / q.budget - 1.25) * 2; r.push(['n', `예산보다 ${won(m.price - q.budget)} 높음`]); }
   if (q.place === '아파트 베란다') {
     if (m.fuel === '전기') { s += 4; r.push(['p', '전기식이라 베란다 사용에 유리']); }
-    else if (m.fuel === '숯') { s -= 4; r.push(['n', '숯은 실내·베란다에서 사용하면 안 됩니다']); }
+    else if (m.fuel === '숯') { s -= 12; r.push(['n', '숯은 실내·베란다에서 사용하면 안 됩니다']); } // 안전: 베란다에는 숯을 추천하지 않음
     else { s -= 1; r.push(['n', '공동주택은 화기 사용 규정 확인 필요']); }
   }
   if (q.place === '캠핑·차박') { if (m.portable) { s += 3; r.push(['p', '들고 다니기 좋은 휴대용']); } else { s -= 3; r.push(['n', '캠핑에 들고 가기엔 무거움']); } }
