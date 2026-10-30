@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" width="360" height="360">
+  <title>큐플이 - 파워뱅크 번쩍 (브랜드 노랑)</title>
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <g transform="translate(36 73) scale(0.8)">
+      <!-- proud sparkle rays -->
+      <path d="M62 -30 L44 -36 M70 -50 L58 -62 M298 -30 L316 -36 M290 -50 L302 -62" fill="none" stroke="#282828" stroke-width="7"/>
+      <!-- portable power bank (generic box with handle, no maker logo) -->
+      <path d="M126 -44 V-50 Q126 -58 134 -58 H226 Q234 -58 234 -50 V-44" fill="none" stroke="#282828" stroke-width="12"/>
+      <rect x="80" y="-44" width="200" height="54" rx="12" fill="#FFF1D6" stroke="#282828" stroke-width="10"/>
+      <rect x="98" y="-34" width="84" height="32" rx="6" fill="#282828"/>
+      <g fill="#F9EC64">
+        <rect x="106" y="-27" width="14" height="18" rx="2"/>
+        <rect x="124" y="-27" width="14" height="18" rx="2"/>
+        <rect x="142" y="-27" width="14" height="18" rx="2"/>
+        <rect x="160" y="-27" width="14" height="18" rx="2"/>
+      </g>
+      <!-- charge bolt: brand yellow + ink outline -->
+      <path transform="translate(214 -39) scale(0.92)" d="M9 0 L-5 23 H5 L-2 44 L18 18 H7 L16 0 Z" fill="#F9EC64" stroke="#282828" stroke-width="5"/>
+      <circle cx="250" cy="-17" r="6" fill="#282828"/>
+      <!-- arms raised, hands gripping the box sides -->
+      <path d="M80 160 L42 76 L76 -6 M280 150 L318 70 L284 -8" fill="none" stroke="#282828" stroke-width="32"/>
+      <path d="M80 160 L42 76 L76 -6 M280 150 L318 70 L284 -8" fill="none" stroke="#F9EC64" stroke-width="18"/>
+      <!-- legs -->
+      <path d="M120 280 V316 M200 280 V316" fill="none" stroke="#282828" stroke-width="34"/>
+      <path d="M120 280 V316 M200 280 V316" fill="none" stroke="#F9EC64" stroke-width="20"/>
+      <!-- cube top and side -->
+      <path d="M76 124 L110 88 L290 88 L290 258 L244 284 L200 200 Z" fill="#F9EC64" stroke="#282828" stroke-width="10"/>
+      <path d="M78 120 L110 92 L286 92 L250 120 Z" fill="#282828" opacity="0.08"/>
+      <path d="M250 122 L290 90 L290 256 L250 280 Z" fill="#282828" opacity="0.22"/>
+      <path d="M250 120 L290 88" fill="none" stroke="#282828" stroke-width="6"/>
+      <!-- plus antenna -->
+      <path d="M180 104 V66" fill="none" stroke="#282828" stroke-width="14"/>
+      <path d="M180 104 V66" fill="none" stroke="#F9EC64" stroke-width="5"/>
+      <g fill="#F9EC64" stroke="#F9EC64" stroke-width="10">
+        <rect x="157" y="42" width="46" height="16" rx="4"/>
+        <rect x="172" y="27" width="16" height="46" rx="4"/>
+      </g>
+      <g fill="#282828">
+        <rect x="157" y="42" width="46" height="16" rx="4"/>
+        <rect x="172" y="27" width="16" height="46" rx="4"/>
+      </g>
+      <!-- cube front -->
+      <rect x="70" y="120" width="180" height="170" rx="16" fill="#F9EC64" stroke="#282828" stroke-width="10"/>
+      <!-- face: proud (happy closed eyes, open grin) -->
+      <path d="M114 196 Q128 178 142 196 M178 196 Q192 178 206 196" fill="none" stroke="#282828" stroke-width="8"/>
+      <ellipse cx="104" cy="226" rx="15" ry="9" fill="#F59A8E" opacity="0.9"/>
+      <ellipse cx="216" cy="226" rx="15" ry="9" fill="#F59A8E" opacity="0.9"/>
+      <path d="M142 216 Q160 248 178 216 Z" fill="#282828" stroke="#282828" stroke-width="5"/>
+      <ellipse cx="160" cy="228" rx="8" ry="4" fill="#F59A8E"/>
+      <!-- chest tent mark -->
+      <path d="M140 276 L160 246 L180 276 Z" fill="#282828" stroke="#282828" stroke-width="4"/>
+      <path d="M154 277 L160 263 L166 277 Z" fill="#F9EC64"/>
+    </g>
+  </g>
+</svg>
