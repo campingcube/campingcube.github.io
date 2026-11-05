@@ -1537,7 +1537,7 @@ const HLONG = ["topic", "notice", "message", "address"];
 // 경조사 수정 내역에 쓰는 칸
 const EV_HFIELDS = [["type", "종류"], ["mood", "분위기"], ["memberId", "회원"], ["relation", "관계"], ["personName", "대상 이름"], ["title", "제목"], ["date", "날짜"], ["time", "시간"], ["venue", "장소"], ["address", "주소"], ["mapUrl", "지도 링크"], ["account", "마음 전하실 곳"], ["message", "알림 글"], ["fundAmount", "경조금"]];
 const EV_HFIELDS_PUBLIC = EV_HFIELDS.filter(([f]) => f !== "fundAmount"); // 경조금은 회장·총무 화면에만
-const HTYPES = ["create", "edit", "cancel", "done"];
+const HTYPES = ["create", "edit", "cancel", "done", "restore"];
 const HMAX = 100; // 문서가 너무 커지지 않게 최근 100개까지만
 // 받침이 있으면 a(이), 없으면 b(가)
 function josa(w, a, b) { const c = str(w).charCodeAt(str(w).length - 1); return c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 ? a : b; }
@@ -1609,7 +1609,7 @@ function historyBlock(mt, fields, elId, names) {
   if (!list.length) return null;
   const more = !!S.histMore[mt.id];
   const shown = more ? list : list.slice(0, 5);
-  const NAMES = names || { create: "공지 올림", cancel: "모임 취소", done: "모임 마침" };
+  const NAMES = names || { create: "공지 올림", cancel: "모임 취소", done: "모임 마침", restore: "취소 되돌림" };
   const box = h("div", { class: "card hist", id: elId || "meeting-history" }, h("ul", { class: "hist-list" }, shown.map((e) => h("li", null,
     h("div", { class: "cap muted" }, stampLabel(e.at)),
     e.type === "edit" ? (e.changes.length ? e.changes.map((c) => h("div", { class: "hline" }, changeLine(c))) : h("div", { class: "hline" }, "공지 고침")) : h("div", { class: "hline" }, NAMES[e.type])))));
@@ -2576,6 +2576,12 @@ function startNewScene() {
   if (mt) { finishMeeting(mt); return; }
   S.draft = null; go("new-scene");
 }
+async function restoreMeeting(mt) {
+  if (!isFlash(mt)) { const act = activeMeeting(); if (act && act.id !== mt.id) { toast("이미 공지 중인 정기모임이 있어요. 그 모임을 먼저 취소하거나 마쳐 주세요.", true); return; } }
+  if (!(await ask("취소를 되돌릴까요?", whenLabel(mt) + " " + meetName(mt) + josa(meetName(mt), "을", "를") + " 다시 \"공지 중\"으로 돌려요. 응답과 수정 내역은 그대로 남아 있어요.", "네, 되돌릴게요", false, "아니요"))) return;
+  const r = await save("meetings/" + mt.id, () => writeMeeting(mt.id, () => ({ patch: { status: "announced" }, entry: { at: Date.now(), type: "restore" } })), "모임을 다시 공지 중으로 돌렸어요");
+  if (r.ok) go("meeting-" + mt.id);
+}
 async function cancelMeeting(mt) {
   if (!(await ask("모임을 취소할까요?", whenLabel(mt) + " " + meetName(mt) + josa(meetName(mt), "을", "를") + " 취소해요. 회원 화면에 \"취소됨\"으로 보여요. 단톡방에도 따로 알려 주세요.", "네, 취소할게요", true, "아니요"))) return;
   const r = await save("meetings/" + mt.id, () => writeMeeting(mt.id, () => ({ patch: { status: "canceled" }, entry: { at: Date.now(), type: "cancel" } })), "모임을 취소했어요");
@@ -2621,6 +2627,8 @@ function meetingView(id) {
       h("button", { class: "btn", type: "button", id: "btn-meeting-edit", onclick: () => go("meeting-edit-" + mt.id) }, "공지 고치기"),
       h("button", { class: "btn danger", type: "button", id: "btn-meeting-cancel", onclick: () => cancelMeeting(mt) }, "모임 취소")));
   }
+  if (S.isChair && mt.status === "canceled") els.push(h("button", { class: "btn main full", type: "button", id: "btn-meeting-restore", style: "margin-top:16px", onclick: () => restoreMeeting(mt) }, "취소 되돌리기 (다시 공지 중으로)"),
+    h("p", { class: "help center" }, "실수로 취소했다면 눌러 주세요. 응답과 수정 내역은 그대로예요."));
   els.push(h("button", { class: "btn text full", type: "button", style: "margin-top:8px", onclick: () => go("meetings") }, "지난 모임 보기 ›"));
   if (S.isChair && mt.status === "announced") dock(h("button", { class: "btn main", type: "button", id: "btn-copy-notice", onclick: () => copyText(meetingText(mt), "공지 문구를 복사했어요. 단톡방에 붙여 넣으세요") }, "단톡방 공지 문구 복사"));
   return h("div", null, els);
