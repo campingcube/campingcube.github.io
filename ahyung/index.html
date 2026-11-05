@@ -886,6 +886,9 @@ body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: 
 .menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .menu-grid .card.tile { min-height: 72px; }
 /* 독촉·미납 안내 시트 */
+.rsvp-old { opacity: .6; font-style: italic; }
+.rsvp .btn.was { border-style: dashed; }
+.rsvp .btn.was::after { content: " (예전)"; font-weight: 400; opacity: .75; }
 .copy-prev { margin-top: 8px; padding: 10px 12px; border-radius: var(--r-md); background: var(--surface-2); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 22px; }
 .one-row { display: flex; gap: 10px; align-items: center; min-height: 56px; padding: 4px 0; }
 .one-row + .one-row { border-top: 1px solid var(--border-soft); }
@@ -1451,17 +1454,25 @@ const whenLabel = (mt) => fmtDate(mt.date) + (timeOk(mt.time) ? " " + mt.time : 
 const meetDays = (mt) => Math.round((parseDate(mt.date) - today()) / 864e5);
 const meetPassed = (mt) => meetDays(mt) <= 0; // 모임 당일부터 "모임 마치기"
 // 한 회원의 응답: 본인 문서(rsvps/<그 회원의 계정 id>)가 먼저, 없으면 회장 대신 체크
-function rsvpOf(mt, memberId) {
+// 재공지 "응답 다시 받기"(meeting.reaskAt) 전에 한 응답은 old: true ("다시 확인 필요"). 회장 대신 체크는 chairRsvpAt(체크한 시각)이 reaskAt 뒤일 때만 새 응답
+const reaskAtOf = (mt) => { const v = Number(mt && mt.reaskAt) || 0; return v > 0 ? v : 0; };
+function rsvpRaw(mt, memberId) {
+  const ra = reaskAtOf(mt);
+  let self = null, chair = null;
   const m = memberById(memberId);
   if (m && m.userId) {
     const doc = S.rsvps.find((r) => r.id === String(m.userId));
     const a = doc && doc.memberId === m.id && doc.answers && typeof doc.answers === "object" ? doc.answers[mt.id] : null;
-    if (a && (a.status === "yes" || a.status === "no")) return { status: a.status, comment: str(a.comment, RSVP_MAX), by: "self", at: Number(a.at) || 0 };
+    if (a && (a.status === "yes" || a.status === "no")) { const at = Number(a.at) || 0; self = { status: a.status, comment: str(a.comment, RSVP_MAX), by: "self", at, old: !!ra && at < ra }; }
   }
   const c = mt.chairRsvp && typeof mt.chairRsvp === "object" ? mt.chairRsvp[memberId] : null;
-  if (c === "yes" || c === "no") return { status: c, comment: "", by: "chair" };
-  return null;
+  if (c === "yes" || c === "no") { const ca = mt.chairRsvpAt && typeof mt.chairRsvpAt === "object" ? Number(mt.chairRsvpAt[memberId]) || 0 : 0; chair = { status: c, comment: "", by: "chair", at: ca, old: !!ra && ca < ra }; }
+  if (self && !self.old) return self;
+  if (chair && !chair.old) return chair;
+  return self || chair;
 }
+// 지금 유효한 응답 (예전 응답은 "아직"으로 셈: 숫자·독촉·할 일 모두)
+function rsvpOf(mt, memberId) { const r = rsvpRaw(mt, memberId); return r && !r.old ? r : null; }
 function rsvpGroups(mt) {
   const g = { yes: [], no: [], none: [] };
   visibleMembers().forEach((m) => { const r = rsvpOf(mt, m.id); g[r ? r.status : "none"].push(m); });
@@ -1537,7 +1548,9 @@ const HLONG = ["topic", "notice", "message", "address"];
 // 경조사 수정 내역에 쓰는 칸
 const EV_HFIELDS = [["type", "종류"], ["mood", "분위기"], ["memberId", "회원"], ["relation", "관계"], ["personName", "대상 이름"], ["title", "제목"], ["date", "날짜"], ["time", "시간"], ["venue", "장소"], ["address", "주소"], ["mapUrl", "지도 링크"], ["account", "마음 전하실 곳"], ["message", "알림 글"], ["fundAmount", "경조금"]];
 const EV_HFIELDS_PUBLIC = EV_HFIELDS.filter(([f]) => f !== "fundAmount"); // 경조금은 회장·총무 화면에만
-const HTYPES = ["create", "edit", "cancel", "done", "restore"];
+const HTYPES = ["create", "edit", "cancel", "done", "restore", "renotice"];
+// 재공지 종류 (meetings history {type:"renotice", kind})
+const RENOTICE = { remind: { label: "다시 알림", hist: "다시 알림" }, resume: { label: "다시 진행합니다", hist: "재공지(다시 진행)" }, reask: { label: "응답 다시 받기", hist: "재공지(응답 다시 받기)" } };
 const HMAX = 100; // 문서가 너무 커지지 않게 최근 100개까지만
 // 받침이 있으면 a(이), 없으면 b(가)
 function josa(w, a, b) { const c = str(w).charCodeAt(str(w).length - 1); return c >= 0xac00 && c <= 0xd7a3 && (c - 0xac00) % 28 ? a : b; }
@@ -1580,7 +1593,7 @@ const stampShort = (ms) => { const d = new Date(Number(ms)); return (d.getMonth(
 function meetHistory(mt, fields) {
   const FS = fields || HFIELDS;
   const list = arr(mt.history).filter((e) => e && typeof e === "object" && Number(e.at) > 0 && HTYPES.includes(e.type))
-    .map((e) => ({ at: Number(e.at), type: e.type, raw: arr(e.changes).length, changes: arr(e.changes).filter((c) => c && typeof c === "object" && FS.some(([f]) => f === c.field)) }))
+    .map((e) => ({ at: Number(e.at), type: e.type, kind: RENOTICE[e.kind] ? e.kind : "remind", raw: arr(e.changes).length, changes: arr(e.changes).filter((c) => c && typeof c === "object" && FS.some(([f]) => f === c.field)) }))
     .filter((e) => !(e.type === "edit" && e.raw > 0 && !e.changes.length)); // 보여 주지 않는 칸(예: 경조금)만 바뀐 기록은 뺌
   if (!list.some((e) => e.type === "create") && Number(mt.createdAt) > 0) list.push({ at: Number(mt.createdAt), type: "create", changes: [] });
   return list.sort((a, b) => b.at - a.at);
@@ -1612,7 +1625,8 @@ function historyBlock(mt, fields, elId, names) {
   const NAMES = names || { create: "공지 올림", cancel: "모임 취소", done: "모임 마침", restore: "취소 되돌림" };
   const box = h("div", { class: "card hist", id: elId || "meeting-history" }, h("ul", { class: "hist-list" }, shown.map((e) => h("li", null,
     h("div", { class: "cap muted" }, stampLabel(e.at)),
-    e.type === "edit" ? (e.changes.length ? e.changes.map((c) => h("div", { class: "hline" }, changeLine(c))) : h("div", { class: "hline" }, "공지 고침")) : h("div", { class: "hline" }, NAMES[e.type])))));
+    e.type === "edit" ? (e.changes.length ? e.changes.map((c) => h("div", { class: "hline" }, changeLine(c))) : h("div", { class: "hline" }, "공지 고침"))
+      : h("div", { class: "hline" }, e.type === "renotice" ? RENOTICE[e.kind].hist : NAMES[e.type])))));
   if (list.length > 5) box.append(h("button", { class: "btn text full", type: "button", id: "hist-more", onclick: () => { S.histMore[mt.id] = !more; refresh(); } }, more ? "접기" : "더 보기 (" + (list.length - 5) + "개 더)"));
   return box;
 }
@@ -2130,6 +2144,8 @@ function todoItems() {
     if (un) out.push(todoChip("todo-finish", "마칠 모임", un, finishSheet, "warn"));
     const act = activeMeeting();
     if (act && !meetPassed(act)) { const n = nudgeTargets(act).length; if (n) out.push(todoChip("todo-nudge", "미응답 " + n + "명 → 독촉", null, () => copySheet(meetNudge(act)))); }
+    // 정기모임 D-3 이내: 다시 알림 권유 (오늘 이미 재공지했으면 숨김, 하루 한 번)
+    if (act && canRenotice(act) && meetDays(act) <= 3 && !renoticedToday(act)) { const d = meetDays(act); out.push(todoChip("todo-renotice", "다시 알림 보내기(" + (d === 0 ? "오늘" : "D-" + d) + ")", null, () => renoticeSheet(act, "remind"))); }
     out.push(...feeChips());
   }
   if (isTreasurer()) out.push(...feeChips());
@@ -2255,12 +2271,13 @@ function homeMeetCard(mt) {
   if (sub) kids.push(h("div", { class: "small muted line2", id: "hm-sub" }, sub));
   if (!S.isChair) {
     if (me && d >= 0) {
-      const cur = rsvpOf(mt, me.id), mineAns = cur && cur.by === "self" ? cur : null, stale = staleRsvp(mt);
-      if (stale) kids.push(h("p", { class: "note warn", id: "rsvp-recheck", style: "margin:10px 0 0" }, "공지가 바뀌었어요. 응답을 다시 눌러 주세요."));
-      const btn = (st) => h("button", { class: "btn " + st, type: "button", id: "rsvp-" + st, "aria-pressed": String(!!cur && cur.status === st),
-        onclick: () => { if (!(mineAns && mineAns.status === st) || stale) answerRsvp(mt, me, st, mineAns ? mineAns.comment : ""); } }, (cur && cur.status === st ? "✓ " : "") + (st === "yes" ? "참석" : "불참"));
+      const cur = rsvpOf(mt, me.id), mineAns = cur && cur.by === "self" ? cur : null, stale = staleRsvp(mt), was = reaskedOld(mt, me.id);
+      if (was) kids.push(h("p", { class: "note warn", id: "rsvp-reask", style: "margin:10px 0 0" }, REASK_LINE));
+      else if (stale) kids.push(h("p", { class: "note warn", id: "rsvp-recheck", style: "margin:10px 0 0" }, "공지가 바뀌었어요. 응답을 다시 눌러 주세요."));
+      const btn = (st) => h("button", { class: "btn " + st + (was && was.status === st ? " was" : ""), type: "button", id: "rsvp-" + st, "aria-pressed": String(!!cur && cur.status === st),
+        onclick: () => { if (!(mineAns && mineAns.status === st) || stale) answerRsvp(mt, me, st, mineAns ? mineAns.comment : was && was.by === "self" ? was.comment : ""); } }, (cur && cur.status === st ? "✓ " : "") + (st === "yes" ? "참석" : "불참"));
       kids.push(h("div", { class: "rsvp", role: "group", "aria-label": "참석 여부" }, btn("yes"), btn("no")),
-        h("p", { class: "small", id: "hm-mine", style: "margin:6px 0 0", "aria-live": "polite" }, cur ? "내 응답: " + (cur.status === "yes" ? "참석" : "불참") + (cur.by === "chair" ? " (회장님 체크)" : "") : "참석 여부를 눌러 주세요."));
+        h("p", { class: "small" + (was ? " rsvp-old" : ""), id: "hm-mine", style: "margin:6px 0 0", "aria-live": "polite" }, cur ? "내 응답: " + (cur.status === "yes" ? "참석" : "불참") + (cur.by === "chair" ? " (회장님 체크)" : "") : was ? wasLabel(was) : "참석 여부를 눌러 주세요."));
     } else if (!me) kids.push(h("p", { class: "small muted", style: "margin:8px 0 0" }, "\"나는 누구?\"로 회원 연결이 되면 참석/불참을 남길 수 있어요."));
   }
   kids.push(h("p", { class: "small cnt-line", id: "hm-counts", "aria-label": "참석 " + g.yes.length + "명, 미응답 " + g.none.length + "명, 불참 " + g.no.length + "명" },
@@ -2270,6 +2287,7 @@ function homeMeetCard(mt) {
     kids.push(h("div", { class: "btn-row", style: "margin-top:10px" },
       h("button", { class: "btn", type: "button", id: "btn-meeting-open", onclick: () => go("meeting-" + mt.id) }, "응답 관리 ›"),
       h("button", { class: "btn", type: "button", id: "btn-meeting-edit-home", onclick: () => go("meeting-edit-" + mt.id) }, "공지 고치기")));
+    if (canRenotice(mt)) kids.push(h("button", { class: "btn full", type: "button", id: "btn-renotice-home", style: "margin-top:8px", onclick: () => renoticeSheet(mt) }, "📢 재공지하기"));
   } else kids.push(h("button", { class: "btn full", type: "button", id: "btn-meeting-open", style: "margin-top:10px", onclick: () => go("meeting-" + mt.id) }, "공지 보기 ›"));
   return h("div", { class: "card meet hm", id: "meet-card-" + mt.id }, meetingPic(mt), h("div", { class: "body" }, kids));
 }
@@ -2415,8 +2433,9 @@ function meetingCard(mt, onHome) {
   if (mt.status === "canceled") kids.push(h("p", { class: "note bad", style: "margin:12px 0 0" }, "이 모임은 취소됐어요."));
   else if (mt.status === "done") kids.push(h("p", { class: "note ok", style: "margin:12px 0 0" }, "모임을 마쳤어요. 출석 도장은 그날 장면 기준이에요."));
   else {
-    const stale = staleRsvp(mt);
-    if (stale) kids.push(h("p", { class: "note warn", id: "rsvp-recheck", style: "margin:12px 0 0" }, "공지가 바뀌었어요 (날짜·시간·장소). 응답을 다시 확인해 주세요. 그대로면 같은 버튼을 한 번 더 눌러 주세요."));
+    const stale = staleRsvp(mt), lm = S.isChair ? null : linkedMe(), was = lm ? reaskedOld(mt, lm.id) : null;
+    if (was && meetDays(mt) >= 0) kids.push(h("p", { class: "note warn", id: "rsvp-reask", style: "margin:12px 0 0" }, REASK_LINE));
+    else if (stale) kids.push(h("p", { class: "note warn", id: "rsvp-recheck", style: "margin:12px 0 0" }, "공지가 바뀌었어요 (날짜·시간·장소). 응답을 다시 확인해 주세요. 그대로면 같은 버튼을 한 번 더 눌러 주세요."));
     kids.push(countsBlock(rsvpGroups(mt)));
     kids.push(rsvpBox(mt));
   }
@@ -2436,6 +2455,10 @@ function staleRsvp(mt) {
   const r = rsvpOf(mt, me.id), big = lastBigEditAt(mt);
   return !!r && r.by === "self" && !!big && r.at < big;
 }
+// 재공지 "응답 다시 받기" 전에 한 응답 (지금은 "아직"으로 셈). 없으면 null
+function reaskedOld(mt, memberId) { const r = rsvpRaw(mt, memberId); return r && r.old ? r : null; }
+const REASK_LINE = "공지가 다시 올라왔어요. 참석 여부를 다시 눌러 주세요.";
+const wasLabel = (r) => "예전 선택: " + (r.status === "yes" ? "참석" : "불참") + (r.by === "chair" ? " (회장님 체크)" : "") + " · 다시 확인 필요";
 // 보는 사람의 참석/불참 버튼
 function rsvpBox(mt) {
   if (S.isChair) return null; // 회장은 "응답 관리"에서 대신 체크
@@ -2451,20 +2474,21 @@ function rsvpBox(mt) {
   }
   const cur = rsvpOf(mt, me.id);
   const mineAns = cur && cur.by === "self" ? cur : null;
+  const was = reaskedOld(mt, me.id); // 재공지 "응답 다시 받기" 전에 한 응답
   const label = (st) => (st === "yes" ? "참석" : "불참");
   if (meetDays(mt) < 0) { box.append(h("p", { class: "small", style: "margin:12px 0 0" }, "모임 날이 지나 응답을 마감했어요." + (cur ? " 내 응답: " + label(cur.status) : ""))); return box; }
   const memo = h("input", { class: "input", id: "rsvp-memo", maxlength: String(RSVP_MAX), autocomplete: "off", placeholder: "한 줄 메모 (선택) 예: 조금 늦어요", "aria-label": "한 줄 메모 (선택, 30자까지)",
-    value: S.memo[mt.id] != null ? S.memo[mt.id] : mineAns ? mineAns.comment : "" });
+    value: S.memo[mt.id] != null ? S.memo[mt.id] : mineAns ? mineAns.comment : was && was.by === "self" ? was.comment : "" });
   const warn = h("div", { class: "err", "aria-live": "polite" });
   const memoBtn = h("button", { class: "btn text", type: "button", id: "rsvp-memo-save", style: "padding-left:0", hidden: true, onclick: () => { if (!mineAns) { warn.textContent = "먼저 참석/불참을 골라 주세요."; toast("먼저 참석/불참을 골라 주세요.", true); return; } answerRsvp(mt, me, mineAns.status, memo.value, "메모를 저장했어요"); } }, "메모 저장");
   const check = () => { warn.textContent = bannedIn(memo.value).length ? "이 말은 바꿔 볼까요? 같이 웃을 수 있는 말이면 좋아요." : ""; memoBtn.hidden = !mineAns || memo.value.trim() === mineAns.comment; };
   memo.addEventListener("input", () => { S.memo[mt.id] = memo.value; check(); });
   check();
-  const btn = (st) => h("button", { class: "btn " + st, type: "button", id: "rsvp-" + st, "aria-pressed": String(!!cur && cur.status === st),
+  const btn = (st) => h("button", { class: "btn " + st + (was && was.status === st ? " was" : ""), type: "button", id: "rsvp-" + st, "aria-pressed": String(!!cur && cur.status === st),
     onclick: () => { if (!(mineAns && mineAns.status === st && memo.value.trim() === mineAns.comment) || staleRsvp(mt)) answerRsvp(mt, me, st, memo.value); } }, (cur && cur.status === st ? "✓ " : "") + label(st));
   const dl = parseDate(mt.rsvpDeadline);
   box.append(...[h("div", { class: "rsvp", role: "group", "aria-label": "참석 여부" }, btn("yes"), btn("no")),
-    h("p", { class: "small", style: "margin:10px 0 0", "aria-live": "polite" }, cur ? "내 응답: " + label(cur.status) + (cur.by === "chair" ? " (회장님이 대신 체크했어요. 직접 누르면 바뀌어요)" : " · 바꾸려면 다른 쪽을 누르세요") : "참석 여부를 눌러 주세요."),
+    h("p", { class: "small" + (was ? " rsvp-old" : ""), id: "rsvp-mine", style: "margin:10px 0 0", "aria-live": "polite" }, cur ? "내 응답: " + label(cur.status) + (cur.by === "chair" ? " (회장님이 대신 체크했어요. 직접 누르면 바뀌어요)" : " · 바꾸려면 다른 쪽을 누르세요") : was ? wasLabel(was) : "참석 여부를 눌러 주세요."),
     dl && today() > dl ? h("p", { class: "note warn", style: "margin:8px 0 0" }, "응답 마감일이 지났어요. 바꾸면 회장님께도 한 번 말해 주세요.") : null,
     h("div", { style: "margin-top:10px" }, memo, warn, memoBtn)].filter(Boolean));
   return box;
@@ -2490,12 +2514,15 @@ async function answerRsvp(mt, me, status, comment, okMsg) {
 // 회장이 대신 체크 (같은 쪽을 다시 누르면 지움)
 function chairSet(mt, memberId, status) {
   const cr = Object.assign({}, mt.chairRsvp && typeof mt.chairRsvp === "object" ? mt.chairRsvp : {});
-  if (cr[memberId] === status) delete cr[memberId]; else cr[memberId] = status;
+  const cat = Object.assign({}, mt.chairRsvpAt && typeof mt.chairRsvpAt === "object" ? mt.chairRsvpAt : {}); // 체크한 시각 (재공지 "응답 다시 받기" 판정용)
+  const old = rsvpRaw(mt, memberId);
+  // 예전 응답(다시 확인 필요)으로 보이는 같은 쪽을 누르면 지우지 않고 새로 체크
+  if (cr[memberId] === status && !(old && old.old)) { delete cr[memberId]; delete cat[memberId]; } else { cr[memberId] = status; cat[memberId] = Date.now(); }
   const local = S.meetings.find((x) => x.id === mt.id);
-  const before = local ? local.chairRsvp : null;
-  if (local) local.chairRsvp = cr;
+  const before = local ? { cr: local.chairRsvp, cat: local.chairRsvpAt } : null;
+  if (local) { local.chairRsvp = cr; local.chairRsvpAt = cat; }
   refresh();
-  save("meetings/" + mt.id, () => col("meetings").doc(mt.id).update({ chairRsvp: cr })).then((r) => { if (!r.ok && local) { local.chairRsvp = before; refresh(); } });
+  save("meetings/" + mt.id, () => col("meetings").doc(mt.id).update({ chairRsvp: cr, chairRsvpAt: cat })).then((r) => { if (!r.ok && local) { local.chairRsvp = before.cr; local.chairRsvpAt = before.cat; refresh(); } });
 }
 function rsvpListBlock(mt) {
   const editable = S.isChair && mt.status === "announced";
@@ -2509,15 +2536,16 @@ function rsvpListBlock(mt) {
       h("p", { class: "cap muted", style: "margin:8px 0 0" }, "메모는 내 화면과 회장님 화면에만 보여요."));
   }
   return h("div", { class: "card", id: "rsvp-list", style: "padding:8px 12px" }, visibleMembers().map((m) => {
-    const r = rsvpOf(mt, m.id);
+    const raw = rsvpRaw(mt, m.id), was = raw && raw.old ? raw : null;
+    const r = was ? null : raw;
     const self = !!r && r.by === "self";
-    const st = r ? (r.status === "yes" ? "참석" : "불참") + (self ? " · 본인 응답" : " · 회장 체크") : "미응답";
+    const st = r ? (r.status === "yes" ? "참석" : "불참") + (self ? " · 본인 응답" : " · 회장 체크") : was ? "예전 응답(다시 확인 필요): " + (was.status === "yes" ? "참석" : "불참") : "미응답";
     const seg = editable && !self ? h("div", { class: "seg", role: "group", "aria-label": str(m.name, 12) + " 대신 체크" },
       h("button", { class: "yes", type: "button", id: "proxy-yes-" + m.id, "aria-pressed": String(!!r && r.status === "yes"), onclick: () => chairSet(mt, m.id, "yes") }, "참석"),
       h("button", { class: "no", type: "button", id: "proxy-no-" + m.id, "aria-pressed": String(!!r && r.status === "no"), onclick: () => chairSet(mt, m.id, "no") }, "불참")) : null;
     return h("div", { class: "prow" }, hexFace(m), h("div", { class: "grow" },
       h("div", { class: "row" }, h("strong", { style: "overflow:hidden;text-overflow:ellipsis;white-space:nowrap" }, str(m.name, 12)), !m.userId && m !== myMember() ? h("span", { class: "cap muted" }, "연결 안 됨") : null),
-      h("div", { class: "small", style: "color:" + (!r ? "var(--text-muted)" : r.status === "yes" ? "var(--success-text)" : "var(--text)") + ";font-weight:700" }, st),
+      h("div", { class: "small" + (was ? " rsvp-old" : ""), id: was ? "rsvp-old-" + m.id : null, style: "color:" + (!r ? "var(--text-muted)" : r.status === "yes" ? "var(--success-text)" : "var(--text)") + ";font-weight:700" }, st),
       r && r.comment ? h("div", { class: "small muted", style: "overflow-wrap:anywhere" }, "\"" + r.comment + "\"") : null), seg);
   }));
 }
@@ -2580,7 +2608,12 @@ async function restoreMeeting(mt) {
   if (!isFlash(mt)) { const act = activeMeeting(); if (act && act.id !== mt.id) { toast("이미 공지 중인 정기모임이 있어요. 그 모임을 먼저 취소하거나 마쳐 주세요.", true); return; } }
   if (!(await ask("취소를 되돌릴까요?", whenLabel(mt) + " " + meetName(mt) + josa(meetName(mt), "을", "를") + " 다시 \"공지 중\"으로 돌려요. 응답과 수정 내역은 그대로 남아 있어요.", "네, 되돌릴게요", false, "아니요"))) return;
   const r = await save("meetings/" + mt.id, () => writeMeeting(mt.id, () => ({ patch: { status: "announced" }, entry: { at: Date.now(), type: "restore" } })), "모임을 다시 공지 중으로 돌렸어요");
-  if (r.ok) go("meeting-" + mt.id);
+  if (r.ok) {
+    go("meeting-" + mt.id);
+    // 단톡방에 "다시 진행합니다"를 알리도록 재공지 시트를 바로 열어 줌 (모임 날이 지났으면 열지 않음)
+    const fresh = Object.assign({}, meetingById(mt.id) || mt, { status: "announced" });
+    if (meetDays(fresh) >= 0) renoticeSheet(fresh, "resume");
+  }
 }
 async function cancelMeeting(mt) {
   if (!(await ask("모임을 취소할까요?", whenLabel(mt) + " " + meetName(mt) + josa(meetName(mt), "을", "를") + " 취소해요. 회원 화면에 \"취소됨\"으로 보여요. 단톡방에도 따로 알려 주세요.", "네, 취소할게요", true, "아니요"))) return;
@@ -2623,6 +2656,8 @@ function meetingView(id) {
   if (S.isChair && mt.status === "announced") {
     if (meetPassed(mt)) els.push(h("button", { class: "btn main", type: "button", id: "btn-finish", style: "margin-top:16px", onclick: () => finishMeeting(mt) }, "모임 마치기 → 장면 만들기"),
       h("p", { class: "help center" }, "참석한다고 한 회원을 미리 골라서 장면 만들기로 가요."));
+    if (canRenotice(mt)) els.push(h("button", { class: "btn full", type: "button", id: "btn-renotice", style: "margin-top:16px", onclick: () => renoticeSheet(mt) }, "📢 재공지하기"),
+      h("p", { class: "help center" }, "다시 알림, 다시 진행, 응답 다시 받기 문구를 만들어요."));
     els.push(h("div", { class: "btn-row", style: "margin-top:16px" },
       h("button", { class: "btn", type: "button", id: "btn-meeting-edit", onclick: () => go("meeting-edit-" + mt.id) }, "공지 고치기"),
       h("button", { class: "btn danger", type: "button", id: "btn-meeting-cancel", onclick: () => cancelMeeting(mt) }, "모임 취소")));
@@ -4749,6 +4784,66 @@ function feeNotice(month) {
     one: (m) => { const c = callOf(m), head = c.to + ", " + f.mo + "월 회비" + (amt ? "(" + amt + ")" : "");
       return c.casual ? head + " 확인이 아직 안 됐어. " + (f.dleft >= 0 ? "마감 " + due + ", " : "마감(" + due + ")이 지났어. ") + "모임통장으로 부탁해~" + acctLine()
         : head + " 확인이 아직 안 됐어요. " + (f.dleft >= 0 ? "마감 " + due + ", " : "마감(" + due + ")이 지났어요. ") + "모임통장으로 부탁드려요 🙏" + acctLine(); } };
+}
+/* ---------- 재공지 (정기모임·번개, 회장): 다시 알림 / 다시 진행합니다 / 응답 다시 받기 ---------- */
+const canRenotice = (mt) => S.isChair && !!mt && mt.status === "announced" && meetDays(mt) >= 0;
+const sameDay = (a, b) => { const x = new Date(Number(a)), y = new Date(Number(b)); return x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth() && x.getDate() === y.getDate(); };
+// 오늘(이 기기 시계 기준) 재공지 문구를 복사한 적이 있는지
+const renoticedToday = (mt) => meetHistory(mt).some((e) => e.type === "renotice" && sameDay(e.at, Date.now()));
+// 기본 종류: 취소 되돌린 뒤 아직 재공지를 안 했으면 "다시 진행합니다", 아니면 "다시 알림"
+function renoticeDefault(mt) {
+  const hs = meetHistory(mt), rs = hs.find((e) => e.type === "restore"), rn = hs.find((e) => e.type === "renotice");
+  return rs && (!rn || rn.at < rs.at) ? "resume" : "remind";
+}
+function renoticeText(mt, kind) {
+  const d = meetDays(mt), name = meetName(mt), letter = noticeOf(mt), g = rsvpGroups(mt);
+  const dl = parseDate(mt.rsvpDeadline) && mt.rsvpDeadline >= ymd(today()) ? parseDate(mt.rsvpDeadline) : null;
+  const way = wayLines(meetWay(mt), false).map((ln) => ln + "\n").join(""); // 📍 주소, 🗺 지도 링크
+  const head = kind === "resume" ? "📢 [재공지] 취소됐던 " + name + ", 다시 진행합니다" : "📢 [다시 알림] " + gname() + " " + name;
+  const dline = d > 0 ? "모임까지 " + d + "일 남았어요" : "오늘 모임이에요";
+  const ask = kind === "reask" ? "날짜·장소가 바뀌어서 참석 여부를 다시 받아요. 다시 눌러 주세요\n" : "";
+  const topic = str(mt.topic, 40).trim();
+  const body = letter ? letter : (topic ? "주제: " + topic : "");
+  // 응답 다시 받기는 지금까지 응답을 다시 받으니 숫자 줄을 넣지 않음
+  const cnt = kind === "reask" ? "" : "🙋 참석 " + g.yes.length + " · 불참 " + g.no.length + " · 아직 " + g.none.length + "\n";
+  return head + "\n" + dline + "\n" + ask + (body ? "\n" + body + "\n" : "") + "\n━━━━━━━━━━\n" +
+    "📅 " + mdLabel(mt.date) + " " + (timeOk(mt.time) ? mt.time : "19:00") + " · " + placeLabel(mt) + "\n" + way + cnt +
+    "✅ 참석/불참 남기기" + (dl ? " (마감 " + (dl.getMonth() + 1) + "/" + dl.getDate() + ")" : "") + "\n" + meetingLink(mt.id);
+}
+function renoticeSheet(mt, kind0) {
+  let kind = RENOTICE[kind0] ? kind0 : renoticeDefault(mt);
+  sheet((close) => {
+    const prev = h("div", { class: "copy-prev", id: "renotice-text" });
+    const warn = h("p", { class: "note warn", id: "renotice-reask-note", style: "margin:10px 0 0" }, "복사하면 지금까지 받은 응답이 \"예전 응답(다시 확인 필요)\"로 바뀌고, 숫자에서는 \"아직\"으로 세요. 회원이 다시 눌러야 해요.");
+    const picks = Object.keys(RENOTICE).map((k) => h("button", { type: "button", id: "renotice-kind-" + k, "aria-pressed": String(k === kind), onclick: () => { kind = k; paint(); } }, RENOTICE[k].label));
+    let paint = function () {
+      prev.textContent = renoticeText(mt, kind);
+      picks.forEach((b) => b.setAttribute("aria-pressed", String(b.id === "renotice-kind-" + kind)));
+      warn.hidden = kind !== "reask";
+    }
+    paint();
+    const doCopy = async (k) => {
+      const text = renoticeText(mt, k), at = Date.now();
+      close();
+      copyText(text, k === "reask" ? "문구를 복사했어요. 응답을 다시 받아요. 단톡방에 붙여 넣으세요" : "재공지 문구를 복사했어요. 단톡방에 붙여 넣으세요");
+      // 쓰기 직전 최신 문서를 읽고 수정 내역에 덧붙임 (공지 중일 때만)
+      await save("meetings/" + mt.id, () => writeMeeting(mt.id, (cur) => (cur.status !== "announced" ? null
+        : { patch: k === "reask" ? { reaskAt: at } : {}, entry: { at, type: "renotice", kind: k } })));
+      refresh();
+    };
+    // 응답 다시 받기는 되돌릴 수 없어서, 시트 안에서 두 버튼 중 하나를 직접 고르게 함 (복사는 누른 순간에)
+    const copyBtn = h("button", { class: "btn main", type: "button", id: "renotice-copy", style: "margin-top:10px", onclick: () => doCopy(kind === "reask" ? "reask" : kind) }, "문구 복사");
+    const textOnlyBtn = h("button", { class: "btn", type: "button", id: "renotice-copy-textonly", style: "margin-top:8px", hidden: true, onclick: () => doCopy("remind") }, "응답은 그대로 두고 문구만 복사");
+    const paint0 = paint;
+    paint = function () { paint0(); copyBtn.textContent = kind === "reask" ? "응답 다시 받고 문구 복사" : "문구 복사"; copyBtn.classList.toggle("danger", kind === "reask"); textOnlyBtn.hidden = kind !== "reask"; };
+    paint();
+    return [h("h2", null, "재공지하기"),
+      h("p", { class: "small", style: "margin:0 0 8px" }, meetName(mt) + " · " + mdShort(mt.date) + ". 어떤 재공지인지 골라 주세요."),
+      h("div", { class: "pick", id: "renotice-kinds", role: "group", "aria-label": "재공지 종류" }, picks),
+      h("div", { class: "lab", style: "font:700 15px/22px var(--font-body);margin-top:12px" }, "단톡방에 붙여 넣을 글 (이름 없이 숫자만)"),
+      prev, warn, copyBtn, textOnlyBtn,
+      h("button", { class: "btn text full", type: "button", id: "renotice-close", style: "margin-top:8px", onclick: close }, "닫기")];
+  });
 }
 // 시트: 위에 단톡방용(숫자만) 문구 + 복사, 아래 1:1용 회원별 [복사]
 function copySheet(o) {
