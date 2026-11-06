@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>스토리</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="13" y="6" width="29" height="25" rx="3" fill="#F9EC64" transform="rotate(8 27.5 18.5)"/>
+    <rect x="6" y="14" width="30" height="27" rx="3" fill="#FFF1D6"/>
+    <path d="M10 36 L17 26 L23 33 L27 29 L32 36 Z" fill="#4A8C5C"/>
+    <circle cx="28" cy="21" r="3" fill="#F9EC64"/>
+  </g>
+</svg>

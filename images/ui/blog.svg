@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>블로그</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 6 H25 L32 13 V42 H7 Z" fill="#FFF1D6"/>
+    <path d="M25 6 V13 H32" fill="none"/>
+    <path d="M12 20 H24 M12 26 H22 M12 32 H18" fill="none"/>
+    <g transform="rotate(40 34 28)">
+      <rect x="30.5" y="17" width="7" height="16" rx="1" fill="#F9EC64"/>
+      <path d="M30.5 33 L34 39 L37.5 33 Z" fill="#FFF1D6"/>
+    </g>
+  </g>
+</svg>

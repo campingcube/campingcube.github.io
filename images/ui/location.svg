@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>오시는 길</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M24 43 C20 38 10 28 10 19 A14 14 0 0 1 38 19 C38 28 28 38 24 43 Z" fill="#F28C38"/>
+    <circle cx="24" cy="19" r="5" fill="#FFF1D6"/>
+  </g>
+</svg>

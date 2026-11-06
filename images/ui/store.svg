@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>스마트스토어</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 17 H39 L37 42 H11 Z" fill="#F9EC64"/>
+    <path d="M18 21 V13 Q18 7 24 7 Q30 7 30 13 V21" fill="none"/>
+    <path d="M24 26 V35 M19.5 30.5 H28.5" fill="none" stroke-width="3"/>
+  </g>
+</svg>

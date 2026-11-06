@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>구글 블로그</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="8" width="30" height="24" rx="3" fill="#FFF1D6"/>
+    <path d="M15 16 H33 M15 23 H27" fill="none"/>
+    <path d="M5 32 H43 L40 39 H8 Z" fill="#F9EC64"/>
+  </g>
+</svg>

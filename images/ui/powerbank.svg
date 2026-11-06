@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <title>파워뱅크</title>
+  <g stroke="#282828" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 14 V10 Q16 7.5 18.5 7.5 H29.5 Q32 7.5 32 10 V14" fill="none"/>
+    <rect x="6" y="14" width="36" height="27" rx="5" fill="#F9EC64"/>
+    <path d="M22 18 L15 29 H20 L18 37 L26 26 H21 L23.5 18 Z" fill="#FFF1D6"/>
+    <circle cx="34" cy="23" r="1.5" fill="#282828"/>
+    <circle cx="34" cy="31" r="1.5" fill="#282828"/>
+  </g>
+</svg>
