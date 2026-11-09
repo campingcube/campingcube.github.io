@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
+<meta charset="utf-8">
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -8,7 +9,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-5SDQZLRV');</script>
 <!-- End Google Tag Manager -->
-<meta charset="utf-8">
+<!-- Google Ads 전환 측정: 스마트스토어 / 유튜브 / 전화·카톡 문의 클릭 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18526875481"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());gtag('config','AW-18526875481');
+(function(){var AW='AW-18526875481/',L={store:'6p-fCN723LQdENnepoJF',yt:'2J_0COH23LQdENnepoJF',call:'dd4HCOT23LQdENnepoJF'};
+function kind(h){if(/shopping\.naver\.com|smartstore\.naver\.com|naver\.me\//.test(h))return'store';
+if(/youtube\.com|youtu\.be/.test(h))return'yt';
+if(/^tel:/.test(h)&&!/15449701/.test(h))return'call';
+if(/pf\.kakao\.com/.test(h))return'call';return null;}
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;
+var k=kind(a.getAttribute('href')||'');if(k)gtag('event','conversion',{send_to:AW+L[k],transport_type:'beacon'});},true);})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta property="og:title" content="웨버그릴 고르기 | 캠핑큐브플러스">
 <meta property="og:description" content="인원·장소·예산만 고르면 내게 맞는 웨버그릴 3개와 세트 금액을 바로 알려 드려요.">
