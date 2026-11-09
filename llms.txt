@@ -21,6 +21,8 @@
 ## 주요 페이지
 - [홈페이지](https://campingcube.github.io/): 매장 소개, 판매 상품, 주행충전기 설치 안내, 설치 사례, 자주 묻는 질문, 오시는 길
 - [잭커리 파워뱅크](https://campingcube.github.io/jackery.html): 잭커리 공식대리점, 대표 제품(잭커리 2000 V2), 파워뱅크+주행충전기 함께 구매 시 설치비 무료 안내, 설치 영상
+- [캠핑용품](https://campingcube.github.io/camping.html): 파주 매장 캠핑용품 전시장, 텐트, 타프, 테이블, 체어, 파라솔, 버너, 소품, 루디5.8 자충에어텐트
+- [매장 안내](https://campingcube.github.io/store.html): 주소(경기도 파주시 중앙로 70, 2층), 운영시간, 주차 50대, 전시장 3곳, 지도 길찾기
 - [웨버그릴 고르기](https://campingcube.github.io/weber.html): 인원·장소·요리 스타일로 맞는 웨버그릴과 세트, 예상 금액 추천
 - [파워뱅크 사용시간 계산기](https://campingcube.github.io/calculator.html): 전기장판, 냉장고 등을 파워뱅크로 몇 시간 쓸 수 있는지 계산
 
