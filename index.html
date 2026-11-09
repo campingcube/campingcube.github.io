@@ -20,7 +20,8 @@ if(/youtube\.com|youtu\.be/.test(h))return'yt';
 if(/^tel:/.test(h)&&!/15449701/.test(h))return'call';
 if(/pf\.kakao\.com/.test(h))return'call';return null;}
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;
-var k=kind(a.getAttribute('href')||'');if(k)gtag('event','conversion',{send_to:AW+L[k],transport_type:'beacon'});},true);})();
+var k=kind(a.getAttribute('href')||'');if(k){gtag('event','conversion',{send_to:AW+L[k],transport_type:'beacon'});
+try{if(window.wcs&&k!=='yt'){window.wcs_add=window.wcs_add||{};wcs_add['wa']='1e0b6d7e76b4da0';var _nasa={};_nasa['cnv']=wcs.cnv(k==='call'?'4':'5','1');wcs_do(_nasa);}}catch(err){}}},true);})();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>캠핑큐브플러스 | 파주 웨버그릴·잭커리 파워뱅크·주행충전기 설치</title>
