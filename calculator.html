@@ -346,8 +346,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li>날씨가 추우면 배터리 성능이 떨어져 사용 시간이 더 짧아질 수 있어요.</li>
       <li>차량용 냉장고는 하루 종일 켜두어도 온도가 맞으면 잠시 멈춰서, 절반(하루 약 12시간) 작동한다고 보고 계산했어요. 여름 한낮이나 문을 자주 열면 더 오래 작동할 수 있어요.</li>
       <li>전기장판도 온도 조절 때문에 켜졌다 꺼졌다 할 수 있어, 실제 사용량은 제품과 온도 설정에 따라 달라요.</li>
+      <li>MD홍은 브랜드 사용량표가 없어 잭커리와 같은 약 85%로 계산했어요.</li>
+      <li>기기 목록의 "스마트폰 충전"은 충전기를 15W로 2시간 꽂아 두는 경우(30Wh)예요. 위의 완충 횟수(1회 약 20Wh)와는 기준이 달라요.</li>
       <li>정확한 상담은 캠핑큐브플러스 매장에 문의해 주세요.</li>
     </ul>
+  </div>
+
+  <div class="notice" id="examples">
+    <b>계산 방법과 예시 (잭커리 2000 V2, 2,042Wh 기준)</b>
+    <p style="margin:6px 0">하룻밤에 쓰는 전기(Wh) = 소비전력(W) × 사용 시간(시간). 쓸 수 있는 용량 = 파워뱅크 용량 × 약 85%(잭커리). 잭커리 2000 V2는 약 1,736Wh를 쓸 수 있다고 보고 계산합니다.</p>
+    <div style="overflow-x:auto">
+    <table style="border-collapse:collapse;width:100%;font-size:14px">
+      <thead><tr><th style="text-align:left;padding:4px">쓰는 기기</th><th style="text-align:left;padding:4px">사용 시간</th><th style="text-align:right;padding:4px">쓰는 전기</th><th style="text-align:right;padding:4px">2000 V2 사용량</th></tr></thead>
+      <tbody>
+        <tr><td>전기장판 1인용 (55W)</td><td>8시간</td><td style="text-align:right">440Wh</td><td style="text-align:right">약 25%</td></tr>
+        <tr><td>전기장판 2인용 (110W)</td><td>8시간</td><td style="text-align:right">880Wh</td><td style="text-align:right">약 51%</td></tr>
+        <tr><td>차량용 냉장고 (50W)</td><td>하루 (실제 작동 약 12시간)</td><td style="text-align:right">600Wh</td><td style="text-align:right">약 35%</td></tr>
+        <tr><td>LED 랜턴 (10W)</td><td>5시간</td><td style="text-align:right">50Wh</td><td style="text-align:right">약 3%</td></tr>
+        <tr><td>전기장판 1인용 + 냉장고 + 랜턴</td><td>하룻밤</td><td style="text-align:right">1,090Wh</td><td style="text-align:right">약 63%</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin:6px 0">스마트폰은 약 86번 완충할 수 있어요(1회 약 20Wh 기준). 잭커리 1000 V2(1,070Wh)라면 1인용 전기장판 8시간에 약 48%를 써요. 모두 계산으로 낸 예상치이고, 추운 날에는 더 빨리 줄어들 수 있어요.</p>
   </div>
 
   <section class="errs" id="errors" aria-labelledby="eTitle" hidden>
@@ -391,7 +411,7 @@ const MODELS=[
   {id:"j1000v2",brand:"잭커리",name:"잭커리 1000 V2",wh:1070,out:1500,surge:3000,kg:"10.8kg",tags:[],url:"https://mkt.shopping.naver.com/link/6ad9e217b8ba063dc6cec83f"},
   {id:"j1000p",brand:"잭커리",name:"잭커리 1000 Plus",wh:1264,out:2000,surge:4000,kg:"14.5kg",tags:[],url:"https://mkt.shopping.naver.com/link/68522a92501108490cdcb017"},
   {id:"j1500u",brand:"잭커리",name:"잭커리 1500 Ultra",wh:1536,out:1800,surge:3600,kg:"17.5kg",tags:["방수방진"],url:"https://mkt.shopping.naver.com/link/6ae2f3e86110634e86511439"},
-  {id:"j2000v2",brand:"잭커리",name:"잭커리 2000 V2",wh:2042,out:2200,surge:4400,kg:"17.5kg",tags:[],url:"https://mkt.shopping.naver.com/link/6a50749d00cc0d59ae193156"},
+  {id:"j2000v2",brand:"잭커리",name:"잭커리 2000 V2",wh:2042,out:2200,surge:4400,kg:"17.9kg",tags:[],url:"https://mkt.shopping.naver.com/link/6a50749d00cc0d59ae193156"},
   {id:"j2000p",brand:"잭커리",name:"잭커리 2000 Plus",wh:2042,out:3000,surge:6000,kg:"27.9kg",tags:[],url:"https://mkt.shopping.naver.com/link/68522bd5501108490cdcb023"},
   {id:"r360",brand:"루트웨이",name:"루트웨이 PB360W",wh:288,out:360,surge:600,kg:"3.5kg",tags:[],url:"https://mkt.shopping.naver.com/link/6ae2f52c830b9b708cade415"},
   {id:"r600",brand:"루트웨이",name:"루트웨이 PB600W",wh:448,out:600,surge:1200,kg:"5.6kg",tags:[],url:"https://mkt.shopping.naver.com/link/6ae2f5aca247bd36750b03d7"},
