@@ -196,15 +196,24 @@ details p{margin:10px 0 0;color:var(--muted)}
 .jk-end{text-align:center}
 .jk-end .btn{margin:6px}
 </style>
+<style id="cc-menu">
+.menu .mi{position:relative;flex:0 0 auto}
+.menu .mi>a{display:inline-block}
+.menu .sub{display:none;position:absolute;top:100%;left:-14px;z-index:40;min-width:180px;flex-direction:column;padding:8px 0;background:var(--surface,#fff);border:1px solid var(--line,#e3e5e8);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.menu .sub a{padding:9px 16px;border:0;font-weight:600;font-size:.92rem;white-space:nowrap}
+.menu .sub a:hover{background:var(--soft,#f5f6f7)}
+@media (min-width:901px){.menu{overflow:visible}.menu .mi:hover>.sub,.menu .mi:focus-within>.sub{display:flex}}
+</style>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SDQZLRV"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<div class="util"><div class="in"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="index.html#contact">오시는 길</a><a href="tel:03180712248">031-8071-2248</a></div></div>
+<div class="util"><div class="in"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="store.html">오시는 길</a><a href="tel:03180712248">031-8071-2248</a></div></div>
 <header><div class="nav"><a class="logo" href="index.html" aria-label="캠핑큐브플러스 홈"><img src="images/site/logo.png" alt="캠핑큐브 CAMPING CUBE+" height="40"></a>
-<nav class="menu"><a href="index.html">홈</a><a href="#why">왜 여기서?</a><a href="#product">대표 제품</a><a href="#charger">주행충전기 무료 설치</a><a href="#video">영상 후기</a><a href="calculator.html">파워뱅크 계산기</a><a href="weber.html">웨버그릴 고르기</a><a href="#faq">자주 묻는 질문</a></nav></div></header>
+<nav class="menu" aria-label="주 메뉴"><div class="mi"><a href="jackery.html">파워뱅크</a><div class="sub"><a href="jackery.html">잭커리 파워뱅크</a><a href="calculator.html">사용시간 계산기</a></div></div><div class="mi"><a href="index.html#install">주행충전기 설치</a><div class="sub"><a href="jackery.html#charger">설치비 무료 조건</a><a href="index.html#cases">차종별 설치 사례</a></div></div><div class="mi"><a href="weber.html">바베큐그릴</a><div class="sub"><a href="weber.html">웨버그릴 고르기</a></div></div><div class="mi"><a href="camping.html">캠핑·차박용품</a><div class="sub"><a href="camping.html#tentcard">텐트·타프</a><a href="camping.html#table">테이블·체어</a><a href="camping.html#etc">소품 (버너·냉장고)</a><a href="camping.html#stove">토요토미 난로</a></div></div><div class="mi"><a href="index.html#cases">설치 사례</a></div><div class="mi"><a href="store.html">매장 안내</a><div class="sub"><a href="store.html#visit">오시는 길</a><a href="store.html#zone">전시장</a><a href="store.html#faq">자주 묻는 질문</a></div></div></nav>
+</div></header>
 
 <div class="jk-hero" id="top"><div class="jk-hero-in"><img fetchpriority="high" src="images/site/showroom-powerbank-2.jpg" alt="캠핑큐브플러스 매장의 잭커리 파워뱅크 전시"><div class="jk-cap">
 <p class="eb">JACKERY 공식대리점 · 경기 파주</p>
@@ -283,10 +292,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="trust"><section class="jk-end">
 <h2>잭커리 파워뱅크, 이제 골라 볼까요?</h2>
 <p class="sub">경기도 파주시 중앙로 70, 2층 · 평일 오전 10시~오후 7시 · 주말 오전 11시~오후 6시 (매월 1, 3, 5번째 일요일 휴무)</p>
-<a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a class="btn kakao" href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡 상담</a><a class="btn g" href="tel:03180712248">전화 031-8071-2248</a><a class="btn g" href="https://map.naver.com/p/entry/place/1300467234" target="_blank" rel="noopener">네이버지도 길찾기</a>
+<a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a class="btn kakao" href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡 상담</a><a class="btn g" href="tel:03180712248">전화 031-8071-2248</a><a class="btn g" href="https://map.naver.com/p/entry/place/1300467234" target="_blank" rel="noopener">네이버지도 길찾기</a><a class="btn g" href="store.html">매장 안내·오시는 길</a>
 </section></div>
 
-<footer><div class="ft-top"><div><h4>매장 안내</h4><p>경기도 파주시 중앙로 70, 2층</p><p>평일 오전 10시~오후 7시<br>주말 오전 11시~오후 6시<br>매월 1, 3, 5번째 일요일 휴무</p></div><div><h4>고객센터</h4><p class="tel"><a href="tel:03180712248">031-8071-2248</a></p><p>2514chul@naver.com</p></div><div><h4>채널</h4><div class="sns"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="https://campingcube.blogspot.com/" target="_blank" rel="noopener">구글 블로그</a><a href="https://www.instagram.com/campingcubeplus" target="_blank" rel="noopener">인스타그램</a></div></div></div><div class="fwrap"><img loading="lazy" decoding="async" class="fimg" src="images/site/logo-footer.png" alt="캠핑큐브플러스 로고" height="72"><div class="finfo">
+<footer><div class="ft-top"><div><h4>매장 안내</h4><p>경기도 파주시 중앙로 70, 2층</p><p>평일 오전 10시~오후 7시<br>주말 오전 11시~오후 6시<br>매월 1, 3, 5번째 일요일 휴무</p></div><div><h4>고객센터</h4><p class="tel"><a href="tel:03180712248">031-8071-2248</a></p><p>2514chul@naver.com</p></div><div><h4>바로가기</h4><div class="sns"><a href="jackery.html">파워뱅크</a><a href="calculator.html">사용시간 계산기</a><a href="index.html#install">주행충전기 설치</a><a href="weber.html">바베큐그릴</a><a href="camping.html">캠핑·차박용품</a><a href="index.html#cases">설치 사례</a><a href="store.html">매장 안내</a><a href="https://map.naver.com/p/entry/place/1300467234" target="_blank" rel="noopener">네이버 플레이스</a><a href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡 상담</a></div></div>
+<div><h4>채널</h4><div class="sns"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="https://campingcube.blogspot.com/" target="_blank" rel="noopener">구글 블로그</a><a href="https://www.instagram.com/campingcubeplus" target="_blank" rel="noopener">인스타그램</a></div></div></div><div class="fwrap"><img loading="lazy" decoding="async" class="fimg" src="images/site/logo-footer.png" alt="캠핑큐브플러스 로고" height="72"><div class="finfo">
 <p>캠핑큐브플러스 | 대표 조병철 | 사업자등록번호 141-05-43590</p>
 <p>주소 경기도 파주시 중앙로 70, 2층 | 전화 031-8071-2248 | 이메일 2514chul@naver.com</p>
 </div></div></footer>

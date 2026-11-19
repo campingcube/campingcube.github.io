@@ -209,15 +209,24 @@ details p{margin:10px 0 0;color:var(--muted)}
 .cc-zone{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:24px}
 .cc-zone .card img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block;margin-bottom:12px}
 </style>
+<style id="cc-menu">
+.menu .mi{position:relative;flex:0 0 auto}
+.menu .mi>a{display:inline-block}
+.menu .sub{display:none;position:absolute;top:100%;left:-14px;z-index:40;min-width:180px;flex-direction:column;padding:8px 0;background:var(--surface,#fff);border:1px solid var(--line,#e3e5e8);border-radius:10px;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.menu .sub a{padding:9px 16px;border:0;font-weight:600;font-size:.92rem;white-space:nowrap}
+.menu .sub a:hover{background:var(--soft,#f5f6f7)}
+@media (min-width:901px){.menu{overflow:visible}.menu .mi:hover>.sub,.menu .mi:focus-within>.sub{display:flex}}
+</style>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SDQZLRV"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<div class="util"><div class="in"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="index.html#contact">오시는 길</a><a href="tel:03180712248">031-8071-2248</a></div></div>
+<div class="util"><div class="in"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="store.html">오시는 길</a><a href="tel:03180712248">031-8071-2248</a></div></div>
 <header><div class="nav"><a class="logo" href="index.html" aria-label="캠핑큐브플러스 홈"><img src="images/site/logo.png" alt="캠핑큐브 CAMPING CUBE+" height="40"></a>
-<nav class="menu"><a href="index.html">홈</a><a href="#why">왜 매장에서?</a><a href="#tent">종류별 보기</a><a href="#showroom">전시장</a><a href="store.html">오시는 길</a><a href="#faq">자주 묻는 질문</a></nav></div></header>
+<nav class="menu" aria-label="주 메뉴"><div class="mi"><a href="jackery.html">파워뱅크</a><div class="sub"><a href="jackery.html">잭커리 파워뱅크</a><a href="calculator.html">사용시간 계산기</a></div></div><div class="mi"><a href="index.html#install">주행충전기 설치</a><div class="sub"><a href="jackery.html#charger">설치비 무료 조건</a><a href="index.html#cases">차종별 설치 사례</a></div></div><div class="mi"><a href="weber.html">바베큐그릴</a><div class="sub"><a href="weber.html">웨버그릴 고르기</a></div></div><div class="mi"><a href="camping.html">캠핑·차박용품</a><div class="sub"><a href="camping.html#tentcard">텐트·타프</a><a href="camping.html#table">테이블·체어</a><a href="camping.html#etc">소품 (버너·냉장고)</a><a href="camping.html#stove">토요토미 난로</a></div></div><div class="mi"><a href="index.html#cases">설치 사례</a></div><div class="mi"><a href="store.html">매장 안내</a><div class="sub"><a href="store.html#visit">오시는 길</a><a href="store.html#zone">전시장</a><a href="store.html#faq">자주 묻는 질문</a></div></div></nav>
+</div></header>
 <div class="jk-hero" id="top"><div class="jk-hero-in"><img fetchpriority="high" src="images/site/hero-1.jpg" alt="캠핑큐브플러스 파주 매장 텐트, 캠핑용품 전시장"><div class="jk-cap">
 <p class="eb">CAMPING GEAR · 경기 파주</p>
 <h1>캠핑·차박용품 매장,<br>직접 보고 만져 보고 고르세요</h1>
@@ -243,7 +252,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="cc-cat">
 <div class="card" id="tentcard"><img loading="lazy" decoding="async" src="images/site/product-3.jpg" alt="루디5.8 자충에어텐트"><h3>텐트, 타프, 그늘막</h3><p>에어텐트, 차박텐트, 타프와 그늘막.</p><ul><li>루디5.8 자충에어텐트: 버튼만 누르면 약 3분 자동 설치</li><li>혼자 캠핑, 2~3인 캠핑 추천</li></ul><a class="btn p" href="https://mkt.shopping.naver.com/link/685d111fa5719b1c23e86132" target="_blank" rel="noopener">루디5.8 보기</a></div>
 <div class="card" id="table"><img loading="lazy" decoding="async" src="images/site/showroom-camping-2.jpg" alt="캠핑용품 텐트, 테이블 전시"><h3>테이블, 체어, 파라솔</h3><p>캠핑 테이블, 의자, 파라솔과 야외 테이블 세트.</p><ul><li>직접 앉아 보고 높이와 무게 확인</li><li>캠핑장, 정원, 테라스용 상담</li></ul><a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">스마트스토어에서 보기</a></div>
-<div class="card" id="etc"><img loading="lazy" decoding="async" src="images/site/showroom-camping-3.jpg" alt="캠핑용품 난로, 냉장고 전시"><h3>버너, 난로, 냉장고, 소품</h3><p>가스버너, 난로, 캠핑 냉장고와 각종 소품.</p><ul><li>동계 캠핑 난방 상담</li><li>전기 제품은 <a href="calculator.html">파워뱅크 계산기</a>로 사용시간 확인</li></ul><a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">스마트스토어에서 보기</a></div>
+<div class="card" id="etc"><img loading="lazy" decoding="async" src="images/site/showroom-camping-1.jpg" alt="캠핑용품 소품 전시장"><h3>버너, 냉장고, 소품</h3><p>가스버너, 캠핑 냉장고와 각종 소품.</p><ul><li>버너 화력과 냉장고 크기를 실물로 비교</li><li>전기 제품은 <a href="calculator.html">파워뱅크 계산기</a>로 사용시간 확인</li></ul><a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">스마트스토어에서 보기</a></div>
+<div class="card" id="stove"><img loading="lazy" decoding="async" src="images/site/showroom-camping-3.jpg" alt="캠핑용품 난로, 냉장고 전시"><h3>토요토미 난로</h3><p>겨울 캠핑에 쓰는 토요토미 석유난로를 매장에서 직접 보고 고를 수 있어요. 모델별 특징과 심지 관리 방법도 함께 알려 드려요.</p><ul><li>텐트 안에서는 통풍구를 2곳 이상 열고, 1시간에 1~2번 환기</li><li>잘 때와 자리를 비울 때는 끄고, 일산화탄소 경보기를 함께 쓰기</li><li>차 안에서는 석유난로를 쓰지 마세요</li></ul><a class="btn kakao" href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡으로 모델 상담</a></div>
+
 </div>
 </section></div>
 
@@ -259,6 +270,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <details><summary>캠핑용품을 매장에서 직접 볼 수 있나요?</summary><p>네. 파주 매장 2층 캠핑용품 전시장에 텐트, 테이블, 체어, 가스버너, 난로, 소품 등을 전시하고 있어 직접 만져 보고 비교하실 수 있습니다.</p></details>
 <details><summary>처음 캠핑을 시작하는데 무엇부터 사야 하나요?</summary><p>캠핑 인원, 차종, 오토캠핑인지 차박인지 알려 주시면 꼭 필요한 것부터 순서대로 골라 드립니다.</p></details>
 <details><summary>루디5.8 자충에어텐트는 어떤 텐트인가요?</summary><p>내장형 펌프로 버튼만 누르면 약 3분 만에 자동으로 세워지는 에어텐트로, 혼자 캠핑, 2~3인 캠핑에 추천합니다.</p></details>
+<details><summary>텐트 안에서 석유난로를 써도 되나요?</summary><p>토요토미는 텐트 안에서 쓸 때 통풍구를 2곳 이상 열고, 난로 사방과 위쪽을 100cm 이상 띄우고, 1시간에 1~2번 환기하고, 잘 때와 텐트를 비울 때는 끄도록 안내합니다. 이너텐트 안에서는 쓰지 않고, 일산화탄소 경보기를 함께 쓰시길 권합니다. 차 안에서는 석유난로를 쓰지 마세요.</p></details>
 <details><summary>가격은 어디서 확인하나요?</summary><p>프로모션 기간에 따라 가격이 달라지는 상품이 많아서, 최신 가격은 <a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a>에서 확인하실 수 있습니다.</p></details>
 <details><summary>매장에 주차할 수 있나요?</summary><p>네. 매장 부지 안에 50대까지 동시에 주차할 수 있습니다.</p></details>
 </section></div>
@@ -269,7 +281,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a class="btn p" href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a class="btn kakao" href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡 상담</a><a class="btn g" href="tel:03180712248">전화 031-8071-2248</a><a class="btn g" href="https://map.naver.com/p/entry/place/1300467234" target="_blank" rel="noopener">네이버지도 길찾기</a>
 </section>
 
-<footer><div class="ft-top"><div><h4>매장 안내</h4><p>경기도 파주시 중앙로 70, 2층</p><p>평일 오전 10시~오후 7시<br>주말 오전 11시~오후 6시<br>매월 1, 3, 5번째 일요일 휴무</p></div><div><h4>고객센터</h4><p class="tel"><a href="tel:03180712248">031-8071-2248</a></p><p>2514chul@naver.com</p></div><div><h4>채널</h4><div class="sns"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="https://campingcube.blogspot.com/" target="_blank" rel="noopener">구글 블로그</a><a href="https://www.instagram.com/campingcubeplus" target="_blank" rel="noopener">인스타그램</a></div></div></div><div class="fwrap"><img loading="lazy" decoding="async" class="fimg" src="images/site/logo-footer.png" alt="캠핑큐브플러스 로고" height="72"><div class="finfo">
+<footer><div class="ft-top"><div><h4>매장 안내</h4><p>경기도 파주시 중앙로 70, 2층</p><p>평일 오전 10시~오후 7시<br>주말 오전 11시~오후 6시<br>매월 1, 3, 5번째 일요일 휴무</p></div><div><h4>고객센터</h4><p class="tel"><a href="tel:03180712248">031-8071-2248</a></p><p>2514chul@naver.com</p></div><div><h4>바로가기</h4><div class="sns"><a href="jackery.html">파워뱅크</a><a href="calculator.html">사용시간 계산기</a><a href="index.html#install">주행충전기 설치</a><a href="weber.html">바베큐그릴</a><a href="camping.html">캠핑·차박용품</a><a href="index.html#cases">설치 사례</a><a href="store.html">매장 안내</a><a href="https://map.naver.com/p/entry/place/1300467234" target="_blank" rel="noopener">네이버 플레이스</a><a href="https://pf.kakao.com/_Kxnexmxj/chat" target="_blank" rel="noopener">카톡 상담</a></div></div>
+<div><h4>채널</h4><div class="sns"><a href="https://mkt.shopping.naver.com/link/68521a152b4ab36a9ced51f2" target="_blank" rel="noopener">네이버 스마트스토어</a><a href="https://youtube.com/@campingcube" target="_blank" rel="noopener">유튜브</a><a href="https://blog.naver.com/2514chul" target="_blank" rel="noopener">네이버 블로그</a><a href="https://campingcube.blogspot.com/" target="_blank" rel="noopener">구글 블로그</a><a href="https://www.instagram.com/campingcubeplus" target="_blank" rel="noopener">인스타그램</a></div></div></div><div class="fwrap"><img loading="lazy" decoding="async" class="fimg" src="images/site/logo-footer.png" alt="캠핑큐브플러스 로고" height="72"><div class="finfo">
 <p>캠핑큐브플러스 | 대표 조병철 | 사업자등록번호 141-05-43590</p>
 <p>주소 경기도 파주시 중앙로 70, 2층 | 전화 031-8071-2248 | 이메일 2514chul@naver.com</p>
 </div></div></footer>
