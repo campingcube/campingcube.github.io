@@ -44,6 +44,6 @@
 - [네이버 블로그 캠핑큐브+](https://blog.naver.com/2514chul): 사용 후기, 설치 사례
 - [구글 블로그](https://campingcube.blogspot.com/): 설치 사례와 선택 가이드
 - [싼타페 하이브리드 + 잭커리 2000 V2 주행충전기 설치 사례](https://campingcube.blogspot.com/2026/11/santafe-hybrid-mx5-jackery-2000-v2-dc-charger.html) (2026-11-17)
-- [잭커리 주행충전기 차단기 용량 고르는 법](https://campingcube.blogspot.com/2026/11/jackery-dc-charger-circuit-breaker-size.html): 순정 100A 퓨즈가 기본, 차단기는 선택. 12V 400W 60A, 600W 70A (2026-11-25, 네이버 블로그 https://blog.naver.com/2514chul/224493165072)
+- [잭커리 주행충전기 차단기 용량 고르는 법](https://campingcube.blogspot.com/2026/11/jackery-dc-charger-circuit-breaker-size.html): 순정 100A 퓨즈가 기본, 차단기는 선택. 12V 400W 60A, 600W 70A (2026-11-25)
 - [유튜브 캠핑큐브](https://youtube.com/@campingcube): 제품 리뷰, 설치 영상
 - [인스타그램](https://www.instagram.com/campingcubeplus)
